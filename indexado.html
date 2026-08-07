@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call of Cthulhu 7e - Investigator Sheet</title>
+    <style>
+        :root {
+            --bg-color: #f4f1ea;
+            --border-color: #2c3e50;
+            --header-bg: #1a252f;
+            --text-light: #ecf0f1;
+            --calc-bg: #e0e0e0;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', serif;
+            background-color: var(--bg-color);
+            color: #333;
+            margin: 0;
+            padding: 10px;
+        }
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border: 2px solid var(--border-color);
+        }
+        
+        .header-wrapper {
+            position: relative;
+            text-align: center;
+            border-bottom: 3px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 10px 0 0 0;
+        }
+        .lang-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #34495e;
+            padding: 5px 10px;
+        }
+
+        .section-title {
+            background-color: var(--header-bg);
+            color: var(--text-light);
+            padding: 8px 15px;
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+            text-transform: uppercase;
+        }
+        
+        /* Grid Layouts */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .grid-8 { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; text-align: center;}
+        
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { font-weight: bold; font-size: 0.9em; margin-bottom: 3px; }
+        input[type="text"], input[type="number"] {
+            padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-family: 'Arial', sans-serif; width: 100%;
+        }
+        
+        /* Auto-calc styling */
+        .stat-group { display: flex; justify-content: center; gap: 3px; margin-top: 5px; }
+        .stat-group input { text-align: center; font-family: 'Arial', sans-serif;}
+        .stat-group input.base { width: 50%; font-size: 1.2em; font-weight: bold; }
+        .stat-group input.derived { width: 25%; font-size: 0.9em; background-color: var(--calc-bg); cursor: not-allowed; padding: 4px;}
+        
+        .stat-box { border: 2px solid var(--border-color); padding: 10px; text-align: center; border-radius: 5px; }
+        .stat-box label { font-size: 1.1em; display: block; font-weight: bold;}
+        
+        .skill-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 5px 0;}
+        .skill-row label { font-size: 0.9em; width: 60%; }
+        .skill-row .stat-group { width: 40%; margin-top: 0; justify-content: flex-end; }
+        .skill-row .stat-group input.base { width: 45px; padding: 4px; font-size: 1em; }
+        .skill-row .stat-group input.derived { width: 35px; }
+
+        .controls {
+            margin-bottom: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; padding: 15px; background: #e8e8e8; border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px; font-size: 0.9em; font-weight: bold; cursor: pointer; background-color: var(--header-bg); color: white; border: none; border-radius: 5px; flex-grow: 1; text-align: center;
+        }
+        button:hover { background-color: #2c3e50; }
+        input[type="file"] { display: none; }
+
+        /* Responsive Design Media Queries */
+        @media (max-width: 768px) {
+            .grid-3 { grid-template-columns: 1fr 1fr; }
+            .grid-8 { grid-template-columns: repeat(4, 1fr); }
+            .skill-row { flex-direction: column; align-items: flex-start; }
+            .skill-row label { width: 100%; margin-bottom: 5px; }
+            .skill-row .stat-group { width: 100%; justify-content: flex-start; }
+            .header-wrapper { padding-top: 30px; }
+        }
+        @media (max-width: 480px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .grid-8 { grid-template-columns: repeat(2, 1fr); }
+            .controls { flex-direction: column; }
+            button { width: 100%; }
+            h1 { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="controls">
+        <button onclick="saveSheet()" data-i18n="btn_save">💾 Save Investigator</button>
+        <button onclick="document.getElementById('loadInput').click()" data-i18n="btn_load">📂 Load Investigator</button>
+        <button onclick="clearSheet()" style="background-color: #c0392b;" data-i18n="btn_clear">🗑️ New / Clear</button>
+        <input type="file" id="loadInput" accept=".json" onchange="loadSheet(event)">
+    </div>
+
+    <div class="header-wrapper">
+        <button class="lang-toggle" onclick="toggleLanguage()">🌐 EN/ES</button>
+        <h1 data-i18n="title">Call of Cthulhu - 7th Edition</h1>
+    </div>
+
+    <div class="section-title" data-i18n="sec_investigator">Investigator Data</div>
+    <div class="grid-2">
+        <div class="form-group"><label data-i18n="lbl_name">Name</label><input type="text" id="charName"></div>
+        <div class="form-group"><label data-i18n="lbl_player">Player</label><input type="text" id="playerName"></div>
+        <div class="form-group"><label data-i18n="lbl_occupation">Occupation</label><input type="text" id="occupation"></div>
+        <div class="form-group"><label data-i18n="lbl_age">Age</label><input type="number" id="age"></div>
+    </div>
+
+    <div class="section-title" data-i18n="sec_characteristics">Characteristics</div>
+    <div class="grid-8">
+        <div class="stat-box"><label data-i18n="stat_str">STR</label><div class="stat-group"><input type="number" id="str" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
+        <div class="stat-box"><label data-i18n="stat_dex">DEX</label><div class="stat-group"><input type="number" id="dex" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
+        <div class="stat-box"><label data-i18n="stat_int">INT</label><div class="stat-group"><input type="number" id="int" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
+        <div class="stat-box"><label data-i18n="stat_con">CON</label><div class="stat-group"><input type="number" id="con" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
+        <div class="stat-box"><label data-i18n="stat_app">APP</label><div class="stat-group"><input type="number" id="app" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
+        <div class="stat-box"><label data-i18n="stat_pow">POW</label><div class="stat-group"><input type="number" id="pow" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
+        <div class="stat-box"><label data-i18n="stat_siz">SIZ</label><div class="stat-group"><input type="number" id="siz" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
+        <div class="stat-box"><label data-i18n="stat_edu">EDU</label><div class="stat-group"><input type="number" id="edu" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
+    </div>
+
+    <div class="section-title" data-i18n="sec_status">Status Metrics</div>
+    <div class="grid-3">
+        <div class="stat-box"><label data-i18n="stat_hp">Hit Points</label><div class="stat-group"><input type="number" id="hp_current" placeholder="Cur"><input type="number" id="hp_max" placeholder="Max"></div></div>
+        <div class="stat-box"><label data-i18n="stat_san">Sanity</label><div class="stat-group"><input type="number" id="san_current" placeholder="Cur"><input type="number" id="san_start" placeholder="Start"></div></div>
+        <div class="stat-box"><label data-i18n="stat_mp">Magic Points</label><div class="stat-group"><input type="number" id="mp_current" placeholder="Cur"><input type="number" id="mp_max" placeholder="Max"></div></div>
+        <div class="stat-box"><label data-i18n="stat_luck">Luck</label><div class="stat-group"><input type="number" id="luck" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
+        <div class="stat-box"><label data-i18n="stat_move">Move Rate</label><div class="stat-group"><input type="number" id="move"></div></div>
+        <div class="stat-box"><label data-i18n="stat_build">Build</label><div class="stat-group"><input type="number" id="build"></div></div>
+    </div>
+
+    <div class="section-title" data-i18n="sec_skills">Skills</div>
+    <div class="grid-3" id="skills-container">
+        </div>
+</div>
+
+<script>
+    let currentLang = 'en';
+
+    // --- Translation Dictionary ---
+    const dict = {
+        "en": {
+            "title": "Call of Cthulhu - 7th Edition",
+            "btn_save": "💾 Save Investigator", "btn_load": "📂 Load Investigator", "btn_clear": "🗑️ New / Clear",
+            "sec_investigator": "Investigator Data", "sec_characteristics": "Characteristics", "sec_status": "Status Metrics", "sec_skills": "Skills (Auto-calculates Hard & Extreme)",
+            "lbl_name": "Name", "lbl_player": "Player", "lbl_occupation": "Occupation", "lbl_age": "Age",
+            "stat_str": "STR", "stat_dex": "DEX", "stat_int": "INT", "stat_con": "CON", "stat_app": "APP", "stat_pow": "POW", "stat_siz": "SIZ", "stat_edu": "EDU",
+            "stat_hp": "Hit Points", "stat_san": "Sanity", "stat_mp": "Magic Points", "stat_luck": "Luck", "stat_move": "Move Rate", "stat_build": "Build"
+        },
+        "es": {
+            "title": "La Llamada de Cthulhu - 7ª Edición",
+            "btn_save": "💾 Guardar Investigador", "btn_load": "📂 Cargar Investigador", "btn_clear": "🗑️ Nuevo / Limpiar",
+            "sec_investigator": "Datos del Investigador", "sec_characteristics": "Características", "sec_status": "Métricas de Estado", "sec_skills": "Habilidades (Auto-calcula Difícil y Extremo)",
+            "lbl_name": "Nombre", "lbl_player": "Jugador", "lbl_occupation": "Ocupación", "lbl_age": "Edad",
+            "stat_str": "FUE", "stat_dex": "DES", "stat_int": "INT", "stat_con": "CON", "stat_app": "APA", "stat_pow": "POD", "stat_siz": "TAM", "stat_edu": "EDU",
+            "stat_hp": "Puntos de Vida", "stat_san": "Cordura", "stat_mp": "Puntos de Magia", "stat_luck": "Suerte", "stat_move": "Movimiento", "stat_build": "Corpulencia"
+        }
+    };
+
+    const skillsData = [
+        { id: "accounting", en: "Accounting (05%)", es: "Contabilidad (05%)" },
+        { id: "anthropology", en: "Anthropology (01%)", es: "Antropología (01%)" },
+        { id: "appraise", en: "Appraise (05%)", es: "Tasación (05%)" },
+        { id: "archaeology", en: "Archaeology (01%)", es: "Arqueología (01%)" },
+        { id: "art", en: "Art/Craft (05%)", es: "Arte/Artesanía (05%)" },
+        { id: "charm", en: "Charm (15%)", es: "Encanto (15%)" },
+        { id: "climb", en: "Climb (20%)", es: "Trepar (20%)" },
+        { id: "credit", en: "Credit Rating (00%)", es: "Crédito (00%)" },
+        { id: "mythos", en: "Cthulhu Mythos (00%)", es: "Mitos de Cthulhu (00%)" },
+        { id: "disguise", en: "Disguise (05%)", es: "Disfrazarse (05%)" },
+        { id: "dodge", en: "Dodge (Half DEX)", es: "Esquivar (Mitad DES)" },
+        { id: "drive", en: "Drive Auto (20%)", es: "Conducir Auto (20%)" },
+        { id: "elec", en: "Elec Repair (10%)", es: "Reparación Eléctrica (10%)" },
+        { id: "fasttalk", en: "Fast Talk (05%)", es: "Charlatanería (05%)" },
+        { id: "brawl", en: "Fighting: Brawl (25%)", es: "Pelea (25%)" },
+        { id: "handgun", en: "Firearms: Handgun (20%)", es: "Armas: Cortas (20%)" },
+        { id: "rifle", en: "Firearms: Rifle/Shotgun (25%)", es: "Armas: Fusil/Escopeta (25%)" },
+        { id: "firstaid", en: "First Aid (30%)", es: "Primeros Auxilios (30%)" },
+        { id: "history", en: "History (05%)", es: "Historia (05%)" },
+        { id: "intimidate", en: "Intimidate (15%)", es: "Intimidar (15%)" },
+        { id: "jump", en: "Jump (20%)", es: "Saltar (20%)" },
+        { id: "langother", en: "Language: Other (01%)", es: "Idioma: Otro (01%)" },
+        { id: "langown", en: "Language: Own (EDU)", es: "Idioma: Propio (EDU)" },
+        { id: "law", en: "Law (05%)", es: "Derecho (05%)" },
+        { id: "library", en: "Library Use (20%)", es: "Uso de Biblioteca (20%)" },
+        { id: "listen", en: "Listen (20%)", es: "Escuchar (20%)" },
+        { id: "locksmith", en: "Locksmith (01%)", es: "Cerrajería (01%)" },
+        { id: "mech", en: "Mech. Repair (10%)", es: "Reparación Mecánica (10%)" },
+        { id: "medicine", en: "Medicine (01%)", es: "Medicina (01%)" },
+        { id: "nature", en: "Natural World (10%)", es: "Ciencias Naturales (10%)" },
+        { id: "navigate", en: "Navigate (10%)", es: "Orientarse (10%)" },
+        { id: "occult", en: "Occult (05%)", es: "Ocultismo (05%)" },
+        { id: "machine", en: "Op. Hv. Machine (01%)", es: "Maquinaria Pesada (01%)" },
+        { id: "persuade", en: "Persuade (10%)", es: "Persuadir (10%)" },
+        { id: "pilot", en: "Pilot (01%)", es: "Pilotar (01%)" },
+        { id: "psycho", en: "Psychoanalysis (01%)", es: "Psicoanálisis (01%)" },
+        { id: "psychology", en: "Psychology (10%)", es: "Psicología (10%)" },
+        { id: "ride", en: "Ride (05%)", es: "Montar (05%)" },
+        { id: "science", en: "Science (01%)", es: "Ciencia (01%)" },
+        { id: "sleight", en: "Sleight of Hand (10%)", es: "Juego de Manos (10%)" },
+        { id: "spot", en: "Spot Hidden (25%)", es: "Descubrir (25%)" },
+        { id: "stealth", en: "Stealth (20%)", es: "Sigilo (20%)" },
+        { id: "survival", en: "Survival (10%)", es: "Supervivencia (10%)" },
+        { id: "swim", en: "Swim (20%)", es: "Nadar (20%)" },
+        { id: "throw", en: "Throw (20%)", es: "Lanzar (20%)" },
+        { id: "track", en: "Track (10%)", es: "Rastrear (10%)" }
+    ];
+
+    // --- Initialization & Language Logic ---
+    function renderSkills() {
+        const container = document.getElementById('skills-container');
+        container.innerHTML = ""; // Clear existing
+        
+        skillsData.forEach(skill => {
+            container.innerHTML += `
+                <div class="skill-row">
+                    <label id="lbl_${skill.id}">${skill[currentLang]}</label>
+                    <div class="stat-group">
+                        <input type="number" id="skill_${skill.id}" class="base auto-calc">
+                        <input type="number" readonly class="derived half" tabindex="-1">
+                        <input type="number" readonly class="derived fifth" tabindex="-1">
+                    </div>
+                </div>
+            `;
+        });
+        attachCalcListeners(); // Re-attach listeners to newly created inputs
+    }
+
+    function toggleLanguage() {
+        currentLang = currentLang === 'en' ? 'es' : 'en';
+        
+        // Update Static Elements
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (dict[currentLang][key]) {
+                // Handle placeholders for specific inputs
+                if (el.tagName === 'INPUT') el.placeholder = dict[currentLang][key];
+                else el.innerText = dict[currentLang][key];
+            }
+        });
+
+        // Update Skill Labels
+        skillsData.forEach(skill => {
+            const label = document.getElementById(`lbl_${skill.id}`);
+            if(label) label.innerText = skill[currentLang];
+        });
+    }
+
+    // --- Auto-Calculation Logic ---
+    function attachCalcListeners() {
+        document.querySelectorAll('.auto-calc').forEach(input => {
+            input.addEventListener('input', function() {
+                let val = parseInt(this.value) || 0;
+                let group = this.parentElement;
+                
+                let halfInput = group.querySelector('.half');
+                let fifthInput = group.querySelector('.fifth');
+                
+                if(halfInput) halfInput.value = this.value === "" ? "" : Math.floor(val / 2);
+                if(fifthInput) fifthInput.value = this.value === "" ? "" : Math.floor(val / 5);
+            });
+        });
+    }
+
+    // --- Save/Load Logic ---
+    function saveSheet() {
+        const data = {};
+        document.querySelectorAll('input:not(.derived)').forEach(input => {
+            if (input.id && input.type !== 'file') data[input.id] = input.value;
+        });
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        
+        let charName = document.getElementById('charName').value.trim() || "investigator";
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = charName.replace(/[^a-z0-9]/gi, '_').toLowerCase() + "_coc7e.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function loadSheet(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                for (const key in data) {
+                    const el = document.getElementById(key);
+                    if (el) {
+                        el.value = data[key];
+                        el.dispatchEvent(new Event('input')); 
+                    }
+                }
+            } catch (err) { alert("Error loading file."); }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    function clearSheet() {
+        if(confirm(currentLang === 'en' ? "Clear sheet? Unsaved data will be lost." : "¿Limpiar ficha? Se perderán los datos no guardados.")) {
+            document.querySelectorAll('input:not([type="file"])').forEach(input => {
+                input.value = '';
+                input.dispatchEvent(new Event('input')); 
+            });
+        }
+    }
+
+    // Initialize on load
+    renderSkills();
+</script>
+
+</body>
+</html>
