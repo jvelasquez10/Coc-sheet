@@ -1,4 +1,4 @@
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,66 +9,138 @@
     <style>
         :root {
             --bg-color: #f4f1ea; --border-color: #2c3e50;
-            --header-bg: #1a252f; --text-light: #ecf0f1; --calc-bg: #e0e0e0;
+            --header-bg: #1a252f; --text-light: #ecf0f1; --calc-bg: #e2e4e6;
+            --accent-green: #27ae60; --accent-red: #c0392b; --accent-blue: #2980b9;
+            --accent-amber: #d35400; --gold: #f1c40f;
         }
         * { box-sizing: border-box; }
-        body { font-family: 'Georgia', serif; background-color: var(--bg-color); color: #333; margin: 0; padding: 10px; }
-        .container { max-width: 950px; margin: 0 auto; background: #fff; padding: 20px; box-shadow: 0 0 15px rgba(0,0,0,0.2); border: 2px solid var(--border-color); }
+        body { font-family: 'Georgia', serif; background-color: var(--bg-color); color: #2c3e50; margin: 0; padding: 12px; }
+        .container { max-width: 1060px; margin: 0 auto; background: #fff; padding: 22px; box-shadow: 0 0 18px rgba(0,0,0,0.18); border: 2px solid var(--border-color); }
         
-        .header-wrapper { position: relative; text-align: center; border-bottom: 3px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; }
-        h1 { font-size: 2em; text-transform: uppercase; margin: 10px 0 0 0; }
-        .lang-toggle { position: absolute; top: 0; right: 0; background-color: #34495e; color: white; padding: 5px 10px; border: none; cursor: pointer; border-radius: 3px;}
+        .header-wrapper { position: relative; text-align: center; border-bottom: 3px solid var(--border-color); padding-bottom: 12px; margin-bottom: 18px; }
+        h1 { font-size: 2.1em; text-transform: uppercase; margin: 10px 0 0 0; letter-spacing: 1.5px; }
+        .lang-toggle { position: absolute; top: 0; right: 0; background-color: #34495e; color: white; padding: 6px 14px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; transition: background 0.2s; }
+        .lang-toggle:hover { background-color: #1a252f; }
 
-        .section-title { background-color: var(--header-bg); color: var(--text-light); padding: 8px 15px; font-size: 1.2em; margin: 20px 0 10px 0; text-transform: uppercase; }
+        .section-title { background-color: var(--header-bg); color: var(--text-light); padding: 8px 15px; font-size: 1.15em; margin: 22px 0 12px 0; text-transform: uppercase; letter-spacing: 0.8px; display: flex; justify-content: space-between; align-items: center; }
+        .section-title .section-hint { font-size: 0.72em; text-transform: none; color: #bdc3c7; font-weight: normal; }
         
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .grid-8 { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; text-align: center;}
+        .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+        .grid-8 { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; text-align: center; }
         
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-weight: bold; font-size: 0.9em; margin-bottom: 3px; }
+        .form-group { display: flex; flex-direction: column; min-width: 0; }
+        .form-group label { font-weight: bold; font-size: 0.88em; margin-bottom: 4px; color: #34495e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        input[type="text"], input[type="password"], select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-family: 'Arial', sans-serif; width: 100%; }
+        input[type="text"], input[type="password"], select { padding: 7px 10px; border: 1px solid #ccc; border-radius: 4px; font-family: 'Arial', sans-serif; width: 100%; font-size: 0.9em; box-sizing: border-box; }
+        input[type="text"]:focus, input[type="number"]:focus, select:focus { outline: none; border-color: #2980b9; box-shadow: 0 0 4px rgba(41,128,185,0.3); }
         
-        /* FIX: Remove browser arrows from number fields and adjust spacing */
-        input[type="number"] { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-family: 'Arial', sans-serif; width: 100%; -moz-appearance: textfield; }
+        /* Remove browser arrows from number fields */
+        input[type="number"] { padding: 6px 4px; border: 1px solid #ccc; border-radius: 4px; font-family: 'Arial', sans-serif; width: 100%; font-size: 0.95em; -moz-appearance: textfield; box-sizing: border-box; }
         input[type="number"]::-webkit-inner-spin-button, 
         input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
-        .stat-group { display: flex; justify-content: center; gap: 3px; margin-top: 5px; }
-        .stat-group input { text-align: center; font-family: 'Arial', sans-serif; padding: 4px; }
-        .stat-group input.base { width: 50%; font-size: 1.2em; font-weight: bold; }
-        .stat-group input.derived { width: 25%; font-size: 0.9em; background-color: var(--calc-bg); cursor: not-allowed; }
+        .stat-group { display: flex; justify-content: center; gap: 3px; margin-top: 4px; }
+        .stat-group input { text-align: center; font-family: 'Arial', sans-serif; padding: 4px 1px; }
+        .stat-group input.base { width: 50%; font-size: 1.1em; font-weight: bold; }
+        .stat-group input.derived { width: 25%; font-size: 0.82em; background-color: var(--calc-bg); cursor: not-allowed; font-weight: normal; }
         
-        .stat-box { border: 2px solid var(--border-color); padding: 10px; text-align: center; border-radius: 5px; }
-        .stat-box label { font-size: 1.1em; display: block; font-weight: bold;}
-        
-        .skill-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 5px 0;}
-        .skill-row label { font-size: 0.9em; width: 60%; }
-        .skill-row .stat-group { width: 40%; margin-top: 0; justify-content: flex-end; }
-        .skill-row .stat-group input.base { width: 45px; font-size: 1em; }
-        .skill-row .stat-group input.derived { width: 35px; }
+        .stat-box { border: 2px solid var(--border-color); padding: 8px 6px; text-align: center; border-radius: 5px; background: #fafafa; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+        .stat-box label { font-size: 0.92em; display: block; font-weight: bold; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .stat-box .hint { font-size: 0.72em; color: #7f8c8d; display: block; margin-top: 3px; }
 
-        .controls { margin-bottom: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; padding: 15px; background: #e8e8e8; border-radius: 5px; }
-        button { padding: 10px 15px; font-size: 0.9em; font-weight: bold; cursor: pointer; background-color: var(--header-bg); color: white; border: none; border-radius: 5px; flex-grow: 1; text-align: center; }
+        /* Trackers Container with Physical Sheet Grids */
+        .trackers-container { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 10px; }
+        .tracker-card { border: 2px solid var(--border-color); border-radius: 6px; background: #fafafa; padding: 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+        .tracker-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; padding-bottom: 6px; flex-wrap: wrap; gap: 6px; }
+        .tracker-header h3 { margin: 0; font-size: 1.05em; color: var(--header-bg); text-transform: uppercase; }
+        .tracker-values { display: flex; gap: 6px; align-items: center; }
+        .tracker-badge { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 2px 6px; font-size: 0.84em; font-weight: bold; display: flex; align-items: center; gap: 4px; }
+        .tracker-badge input { width: 44px; padding: 2px 4px; font-size: 1em; font-weight: bold; text-align: center; border: 1px solid #aaa; border-radius: 3px; }
+
+        .delta-bar { display: flex; align-items: center; gap: 6px; background: #eef2f5; padding: 6px 10px; border-radius: 4px; flex-wrap: wrap; }
+        .delta-bar label { font-size: 0.82em; font-weight: bold; color: #444; }
+        .delta-bar input.delta-val { width: 50px; padding: 4px; text-align: center; font-weight: bold; font-size: 0.95em; border: 1px solid #bbb; border-radius: 3px; }
+        .btn-delta { padding: 4px 10px; font-size: 1.05em; font-weight: bold; border: none; border-radius: 3px; cursor: pointer; flex-grow: 0; line-height: 1; transition: opacity 0.15s, transform 0.1s; color: white; }
+        .btn-delta.minus { background-color: var(--accent-red); }
+        .btn-delta.plus { background-color: var(--accent-green); }
+        .btn-delta:hover { opacity: 0.88; }
+        .btn-delta:active { transform: scale(0.95); }
+
+        .quick-step-btns { display: flex; gap: 3px; margin-left: auto; }
+        .btn-step { background: #e0e0e0; color: #333; border: 1px solid #bbb; padding: 3px 6px; border-radius: 3px; font-size: 0.74em; cursor: pointer; font-weight: bold; flex-grow: 0; transition: background 0.15s; }
+        .btn-step:hover { background: #bdc3c7; }
+        .btn-step:active { background: #95a5a6; }
+
+        /* Status condition flags */
+        .condition-checks { display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; padding: 4px 8px; background: #fff; border: 1px dashed #ccc; border-radius: 4px; font-size: 0.78em; }
+        .condition-checks label { display: flex; align-items: center; gap: 5px; font-weight: normal; cursor: pointer; margin: 0; }
+        .condition-checks input[type="checkbox"] { width: 14px; height: 14px; cursor: pointer; margin: 0; }
+
+        /* Number Grid Container */
+        .num-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(26px, 1fr)); gap: 3px; background: #fff; border: 1px solid #ccc; padding: 6px; border-radius: 4px; max-height: 135px; overflow-y: auto; }
+        .num-grid.small-range { max-height: none; grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)); }
+        .grid-num { font-family: 'Courier New', monospace; font-size: 0.78em; padding: 4px 2px; text-align: center; border: 1px solid #ddd; border-radius: 2px; background: #fdfdfd; cursor: pointer; user-select: none; color: #444; transition: all 0.12s; }
+        .grid-num:hover { background: #2980b9; color: #fff; border-color: #2980b9; }
+        .grid-num.active { background: #1a252f !important; color: var(--gold) !important; font-weight: bold; border-color: #1a252f !important; box-shadow: 0 0 6px rgba(241,196,15,0.7); transform: scale(1.08); z-index: 2; }
+        .grid-num.over-max { color: #bbb; background: #f3f3f3; text-decoration: line-through; opacity: 0.6; }
+
+        /* Skills toolbar & row */
+        .skills-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px; flex-wrap: wrap; }
+        .skills-toolbar input { max-width: 280px; padding: 7px 10px; font-size: 0.9em; }
+        .skills-toolbar .count { font-size: 0.85em; color: #555; font-style: italic; }
+
+        .skill-row { display: flex; align-items: center; border-bottom: 1px solid #eee; padding: 4px 2px; transition: background 0.15s; gap: 4px; min-width: 0; overflow: hidden; }
+        .skill-row:hover { background-color: #f7f9fa; }
+        .skill-row .dev-check { width: 15px; height: 15px; cursor: pointer; margin: 0; accent-color: var(--header-bg); flex: 0 0 15px; }
+        .skill-title-wrap { display: flex; align-items: center; gap: 4px; flex: 1 1 auto; min-width: 0; overflow: hidden; }
+        .skill-title-wrap label { font-size: 0.83em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto; min-width: 0; color: #2c3e50; }
+        .skill-title-wrap input.custom-name { font-size: 0.82em; padding: 2px 4px; border: 1px solid #ccc; border-radius: 3px; flex: 1 1 auto; min-width: 45px; max-width: 105px; box-sizing: border-box; height: 25px; }
+        
+        .skill-row .stat-group { display: flex; gap: 2px; flex: 0 0 auto; margin-left: auto; justify-content: flex-end; }
+        .skill-row .stat-group input.base { width: 36px; font-size: 0.9em; padding: 4px 1px; height: 26px; }
+        .skill-row .stat-group input.derived { width: 25px; font-size: 0.78em; padding: 4px 1px; height: 26px; }
+
+        /* Combat & Weapons Section */
+        .combat-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
+        .weapons-table-wrapper { overflow-x: auto; border: 1px solid #ccc; border-radius: 5px; background: #fff; }
+        .weapons-table { width: 100%; border-collapse: collapse; font-size: 0.86em; text-align: center; }
+        .weapons-table th { background-color: #2c3e50; color: white; padding: 8px 6px; font-weight: bold; border-right: 1px solid #34495e; font-size: 0.85em; }
+        .weapons-table td { padding: 6px 4px; border-bottom: 1px solid #eee; border-right: 1px solid #eee; }
+        .weapons-table td input { padding: 4px 6px; font-size: 0.95em; text-align: center; border: 1px solid #ddd; border-radius: 3px; width: 100%; }
+        .weapons-table td input.weapon-name { text-align: left; }
+        .weapons-table tr:hover { background-color: #fcfcfc; }
+        .weapons-actions { margin-top: 10px; display: flex; justify-content: flex-end; }
+        .btn-add-weapon { padding: 6px 14px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85em; font-weight: bold; flex-grow: 0; }
+        .btn-add-weapon:hover { background: #219653; }
+
+        .controls { margin-bottom: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; padding: 12px; background: #e8e8e8; border-radius: 5px; }
+        button { padding: 10px 16px; font-size: 0.9em; font-weight: bold; cursor: pointer; background-color: var(--header-bg); color: white; border: none; border-radius: 4px; flex-grow: 1; text-align: center; transition: background 0.2s, transform 0.1s; }
         button:hover { background-color: #2c3e50; }
+        button:active { transform: scale(0.98); }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 20px; border-radius: 5px; width: 90%; max-width: 400px; text-align: center; }
-        .modal-content h3 { margin-top: 0; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 25px; border-radius: 6px; width: 90%; max-width: 440px; text-align: center; box-shadow: 0 5px 25px rgba(0,0,0,0.3); }
+        .modal-content h3 { margin-top: 0; margin-bottom: 15px; color: var(--header-bg); }
+        .modal-content p { font-size: 0.9em; color: #555; margin-bottom: 15px; }
         .modal-content select, .modal-content input { margin-bottom: 15px; }
         .modal-buttons { display: flex; gap: 10px; }
 
-        @media (max-width: 768px) {
-            .grid-3 { grid-template-columns: 1fr 1fr; }
+        /* Toast notification */
+        #toast { position: fixed; bottom: 25px; right: 25px; min-width: 250px; background: #2c3e50; color: white; padding: 12px 20px; border-radius: 5px; box-shadow: 0 4px 15px rgba(0,0,0,0.25); display: none; z-index: 2000; font-size: 0.95em; font-family: 'Arial', sans-serif; }
+        #toast.success { background: var(--accent-green); }
+        #toast.error { background: var(--accent-red); }
+
+        @media (max-width: 860px) {
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
             .grid-8 { grid-template-columns: repeat(4, 1fr); }
-            .skill-row { flex-direction: column; align-items: flex-start; }
-            .skill-row label { width: 100%; margin-bottom: 5px; }
-            .skill-row .stat-group { width: 100%; justify-content: flex-start; }
-            .header-wrapper { padding-top: 30px; }
+            .grid-3 { grid-template-columns: 1fr 1fr; }
+            .trackers-container { grid-template-columns: 1fr; }
+            .combat-summary-grid { grid-template-columns: 1fr; }
         }
-        @media (max-width: 480px) {
-            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        @media (max-width: 600px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
             .grid-8 { grid-template-columns: repeat(2, 1fr); }
             .controls { flex-direction: column; }
         }
@@ -78,201 +150,1110 @@
 
 <div class="container">
     <div class="controls">
-        <button onclick="saveToDB()" data-i18n="btn_save">☁️ Save to Database</button>
-        <button onclick="openLoadModal()" data-i18n="btn_load">☁️ Load from Database</button>
-        <button onclick="clearSheet()" style="background-color: #c0392b;" data-i18n="btn_clear">🗑️ New / Clear</button>
+        <button type="button" onclick="openSaveModal()" data-i18n="btn_save">☁️ Save to Database</button>
+        <button type="button" onclick="openLoadModal()" data-i18n="btn_load">☁️ Load from Database</button>
+        <button type="button" onclick="clearSheet()" style="background-color: var(--accent-red);" data-i18n="btn_clear">🗑️ New / Clear</button>
     </div>
 
     <div class="header-wrapper">
-        <button class="lang-toggle" onclick="toggleLanguage()">🌐 EN/ES</button>
+        <button type="button" class="lang-toggle" onclick="toggleLanguage()">🌐 EN/ES</button>
         <h1 data-i18n="title">Call of Cthulhu - 7th Edition</h1>
     </div>
 
+    <!-- Investigator Data -->
     <div class="section-title" data-i18n="sec_investigator">Investigator Data</div>
-    <div class="grid-2">
+    <div class="grid-4">
         <div class="form-group"><label data-i18n="lbl_name">Name</label><input type="text" id="charName"></div>
         <div class="form-group"><label data-i18n="lbl_player">Player</label><input type="text" id="playerName"></div>
         <div class="form-group"><label data-i18n="lbl_occupation">Occupation</label><input type="text" id="occupation"></div>
-        <div class="form-group"><label data-i18n="lbl_age">Age</label><input type="number" id="age"></div>
+        <div class="form-group"><label data-i18n="lbl_age">Age</label><input type="number" id="age" min="15" max="99"></div>
+    </div>
+    <div class="grid-3" style="margin-top: 10px;">
+        <div class="form-group"><label data-i18n="lbl_gender">Gender</label><input type="text" id="gender"></div>
+        <div class="form-group"><label data-i18n="lbl_residence">Residence</label><input type="text" id="residence"></div>
+        <div class="form-group"><label data-i18n="lbl_birthplace">Birthplace</label><input type="text" id="birthplace"></div>
     </div>
 
-    <div class="section-title" data-i18n="sec_characteristics">Characteristics</div>
+    <!-- Characteristics -->
+    <div class="section-title">
+        <span data-i18n="sec_characteristics">Characteristics</span>
+        <span class="section-hint" data-i18n="hint_char_triad">Standard / Hard (½) / Extreme (⅕)</span>
+    </div>
     <div class="grid-8">
         <div class="stat-box"><label data-i18n="stat_str">STR</label><div class="stat-group"><input type="number" id="str" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
         <div class="stat-box"><label data-i18n="stat_dex">DEX</label><div class="stat-group"><input type="number" id="dex" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
-        <div class="stat-box"><label data-i18n="stat_int">INT</label><div class="stat-group"><input type="number" id="int" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
+        <div class="stat-box"><label data-i18n="stat_int">INT</label><div class="stat-group"><input type="number" id="int" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div><span class="hint" data-i18n="lbl_idea">Idea</span></div>
         <div class="stat-box"><label data-i18n="stat_con">CON</label><div class="stat-group"><input type="number" id="con" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
         <div class="stat-box"><label data-i18n="stat_app">APP</label><div class="stat-group"><input type="number" id="app" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
         <div class="stat-box"><label data-i18n="stat_pow">POW</label><div class="stat-group"><input type="number" id="pow" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
         <div class="stat-box"><label data-i18n="stat_siz">SIZ</label><div class="stat-group"><input type="number" id="siz" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
-        <div class="stat-box"><label data-i18n="stat_edu">EDU</label><div class="stat-group"><input type="number" id="edu" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
+        <div class="stat-box"><label data-i18n="stat_edu">EDU</label><div class="stat-group"><input type="number" id="edu" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div><span class="hint" data-i18n="lbl_know">Know</span></div>
     </div>
 
-    <div class="section-title" data-i18n="sec_status">Status Metrics</div>
-    <div class="grid-3">
-        <div class="stat-box"><label data-i18n="stat_hp">Hit Points</label><div class="stat-group"><input type="number" id="hp_current" placeholder="Cur"><input type="number" id="hp_max" placeholder="Max"></div></div>
-        <div class="stat-box"><label data-i18n="stat_san">Sanity</label><div class="stat-group"><input type="number" id="san_current" placeholder="Cur"><input type="number" id="san_start" placeholder="Start"></div></div>
-        <div class="stat-box"><label data-i18n="stat_mp">Magic Points</label><div class="stat-group"><input type="number" id="mp_current" placeholder="Cur"><input type="number" id="mp_max" placeholder="Max"></div></div>
-        <div class="stat-box"><label data-i18n="stat_luck">Luck</label><div class="stat-group"><input type="number" id="luck" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>
-        <div class="stat-box"><label data-i18n="stat_move">Move Rate</label><div class="stat-group"><input type="number" id="move"></div></div>
-        <div class="stat-box"><label data-i18n="stat_build">Build</label><div class="stat-group"><input type="number" id="build"></div></div>
+    <!-- Status & Interactive Physical Grids -->
+    <div class="section-title">
+        <span data-i18n="sec_status">Status & Trackers</span>
+        <span class="section-hint" data-i18n="hint_trackers">Click numbers or use [+/-] delta to update</span>
+    </div>
+    
+    <div class="trackers-container">
+        <!-- 1. Hit Points Tracker -->
+        <div class="tracker-card">
+            <div class="tracker-header">
+                <h3 data-i18n="stat_hp">Hit Points</h3>
+                <div class="tracker-values">
+                    <span class="tracker-badge"><span data-i18n="lbl_cur">Cur:</span><input type="number" id="hp_current" oninput="onTrackerInput('hp')"></span>
+                    <span class="tracker-badge"><span data-i18n="lbl_max">Max:</span><input type="number" id="hp_max" readonly style="background-color: var(--calc-bg);"></span>
+                </div>
+            </div>
+            <div class="delta-bar">
+                <label data-i18n="lbl_delta">Delta:</label>
+                <input type="number" id="hp_delta" placeholder="Pts" min="1" class="delta-val">
+                <button type="button" class="btn-delta minus" onclick="applyDelta('hp', -1)" title="Reduce HP">−</button>
+                <button type="button" class="btn-delta plus" onclick="applyDelta('hp', +1)" title="Increase HP">+</button>
+                <div class="quick-step-btns">
+                    <button type="button" class="btn-step" onclick="applyDirectDelta('hp', -1)">-1</button>
+                    <button type="button" class="btn-step" onclick="applyDirectDelta('hp', +1)">+1</button>
+                    <button type="button" class="btn-step" onclick="resetToMax('hp')">Max</button>
+                </div>
+            </div>
+            <div class="condition-checks">
+                <label><input type="checkbox" id="hp_major_wound"><span data-i18n="cond_major_wound">Major Wound</span></label>
+                <label><input type="checkbox" id="hp_unconscious"><span data-i18n="cond_unconscious">Unconscious</span></label>
+                <label><input type="checkbox" id="hp_dying"><span data-i18n="cond_dying">Dying</span></label>
+            </div>
+            <!-- Physical Sheet Grid: 00 to 24 -->
+            <div class="num-grid small-range" id="grid_hp"></div>
+        </div>
+
+        <!-- 2. Sanity Tracker -->
+        <div class="tracker-card">
+            <div class="tracker-header">
+                <h3 data-i18n="stat_san">Sanity</h3>
+                <div class="tracker-values">
+                    <span class="tracker-badge"><span data-i18n="lbl_cur">Cur:</span><input type="number" id="san_current" oninput="onTrackerInput('san')"></span>
+                    <span class="tracker-badge" title="Start = POW"><span data-i18n="lbl_start">Start:</span><input type="number" id="san_start" readonly style="background-color: var(--calc-bg);"></span>
+                    <span class="tracker-badge" title="Max = 99 - Cthulhu Mythos"><span data-i18n="lbl_max">Max:</span><input type="number" id="san_max" readonly style="background-color: var(--calc-bg);"></span>
+                </div>
+            </div>
+            <div class="delta-bar">
+                <label data-i18n="lbl_delta">Delta:</label>
+                <input type="number" id="san_delta" placeholder="Pts" min="1" class="delta-val">
+                <button type="button" class="btn-delta minus" onclick="applyDelta('san', -1)" title="Reduce Sanity">−</button>
+                <button type="button" class="btn-delta plus" onclick="applyDelta('san', +1)" title="Increase Sanity">+</button>
+                <div class="quick-step-btns">
+                    <button type="button" class="btn-step" onclick="applyDirectDelta('san', -1)">-1</button>
+                    <button type="button" class="btn-step" onclick="applyDirectDelta('san', -5)">-5</button>
+                    <button type="button" class="btn-step" onclick="applyDirectDelta('san', +1)">+1</button>
+                </div>
+            </div>
+            <div class="condition-checks">
+                <label><input type="checkbox" id="san_temp_insane"><span data-i18n="cond_temp_insane">Temp. Insane</span></label>
+                <label><input type="checkbox" id="san_indef_insane"><span data-i18n="cond_indef_insane">Indef. Insane</span></label>
+                <label><input type="checkbox" id="san_permanently_insane"><span data-i18n="cond_loco">Loco</span></label>
+            </div>
+            <!-- Physical Sheet Grid: 01 to 99 -->
+            <div class="num-grid" id="grid_san"></div>
+        </div>
+
+        <!-- 3. Magic Points Tracker -->
+        <div class="tracker-card">
+            <div class="tracker-header">
+                <h3 data-i18n="stat_mp">Magic Points</h3>
+                <div class="tracker-values">
+                    <span class="tracker-badge"><span data-i18n="lbl_cur">Cur:</span><input type="number" id="mp_current" oninput="onTrackerInput('mp')"></span>
+                    <span class="tracker-badge"><span data-i18n="lbl_max">Max:</span><input type="number" id="mp_max" readonly style="background-color: var(--calc-bg);"></span>
+                </div>
+            </div>
+            <div class="delta-bar">
+                <label data-i18n="lbl_delta">Delta:</label>
+                <input type="number" id="mp_delta" placeholder="Pts" min="1" class="delta-val">
+                <button type="button" class="btn-delta minus" onclick="applyDelta('mp', -1)" title="Spend MP">−</button>
+                <button type="button" class="btn-delta plus" onclick="applyDelta('mp', +1)" title="Regain MP">+</button>
+                <div class="quick-step-btns">
+                    <button type="button" class="btn-step" onclick="applyDirectDelta('mp', -1)">-1</button>
+                    <button type="button" class="btn-step" onclick="applyDirectDelta('mp', +1)">+1</button>
+                    <button type="button" class="btn-step" onclick="resetToMax('mp')">Max</button>
+                </div>
+            </div>
+            <!-- Physical Sheet Grid: 00 to 24 -->
+            <div class="num-grid small-range" id="grid_mp"></div>
+        </div>
+
+        <!-- 4. Luck Tracker -->
+        <div class="tracker-card">
+            <div class="tracker-header">
+                <h3 data-i18n="stat_luck">Luck</h3>
+                <div class="tracker-values">
+                    <span class="tracker-badge"><span data-i18n="lbl_cur">Cur:</span><input type="number" id="luck" class="base auto-calc" oninput="onTrackerInput('luck')"></span>
+                    <span class="tracker-badge"><span data-i18n="lbl_half">½:</span><input type="number" id="luck_half" readonly class="derived half" tabindex="-1"></span>
+                    <span class="tracker-badge"><span data-i18n="lbl_fifth">⅕:</span><input type="number" id="luck_fifth" readonly class="derived fifth" tabindex="-1"></span>
+                </div>
+            </div>
+            <div class="delta-bar">
+                <label data-i18n="lbl_delta">Delta:</label>
+                <input type="number" id="luck_delta" placeholder="Pts" min="1" class="delta-val">
+                <button type="button" class="btn-delta minus" onclick="applyDelta('luck', -1)" title="Spend Luck">−</button>
+                <button type="button" class="btn-delta plus" onclick="applyDelta('luck', +1)" title="Gain Luck">+</button>
+                <div class="quick-step-btns">
+                    <button type="button" class="btn-step" onclick="applyDirectDelta('luck', -1)">-1</button>
+                    <button type="button" class="btn-step" onclick="applyDirectDelta('luck', -5)">-5</button>
+                    <button type="button" class="btn-step" onclick="applyDirectDelta('luck', +1)">+1</button>
+                </div>
+            </div>
+            <div class="condition-checks">
+                <label><input type="checkbox" id="luck_spent"><span data-i18n="cond_luck_spent">Spent (Agotada)</span></label>
+            </div>
+            <!-- Physical Sheet Grid: 01 to 99 -->
+            <div class="num-grid" id="grid_luck"></div>
+        </div>
     </div>
 
-    <div class="section-title" data-i18n="sec_skills">Skills</div>
+    <!-- Combat & Weapons Section -->
+    <div class="section-title">
+        <span data-i18n="sec_combat">Combat & Weapons</span>
+        <span class="section-hint" data-i18n="hint_combat">Damage Bonus, Build, Dodge & Weapons</span>
+    </div>
+    
+    <div class="combat-summary-grid">
+        <div class="stat-box">
+            <label data-i18n="stat_db">Damage Bonus (DB)</label>
+            <input type="text" id="damage_bonus" readonly style="background-color: var(--calc-bg); font-weight: bold; font-size: 1.15em; text-align: center;">
+            <span class="hint" data-i18n="hint_db">STR + SIZ</span>
+        </div>
+        <div class="stat-box">
+            <label data-i18n="stat_build">Build (Corpulencia)</label>
+            <input type="text" id="build" readonly style="background-color: var(--calc-bg); font-weight: bold; font-size: 1.15em; text-align: center;">
+            <span class="hint" data-i18n="hint_build">STR + SIZ</span>
+        </div>
+        <div class="stat-box">
+            <label data-i18n="stat_combat_dodge">Dodge (Esquivar)</label>
+            <div class="stat-group">
+                <input type="number" id="combat_dodge" class="base auto-calc" readonly style="background-color: var(--calc-bg);">
+                <input type="number" id="combat_dodge_half" readonly class="derived half" tabindex="-1">
+                <input type="number" id="combat_dodge_fifth" readonly class="derived fifth" tabindex="-1">
+            </div>
+            <span class="hint" data-i18n="hint_dodge">DEX / 2</span>
+        </div>
+    </div>
+
+    <!-- Weapons Table -->
+    <div class="weapons-table-wrapper">
+        <table class="weapons-table">
+            <thead>
+                <tr>
+                    <th style="width: 22%;" data-i18n="th_weapon">Weapon</th>
+                    <th style="width: 8%;" data-i18n="th_regular">Reg</th>
+                    <th style="width: 8%;" data-i18n="th_hard">Hard (½)</th>
+                    <th style="width: 8%;" data-i18n="th_extreme">Ext (⅕)</th>
+                    <th style="width: 14%;" data-i18n="th_damage">Damage</th>
+                    <th style="width: 10%;" data-i18n="th_range">Range</th>
+                    <th style="width: 10%;" data-i18n="th_attacks">Attacks</th>
+                    <th style="width: 10%;" data-i18n="th_ammo">Ammo</th>
+                    <th style="width: 10%;" data-i18n="th_malf">Malf</th>
+                </tr>
+            </thead>
+            <tbody id="weapons-tbody">
+                <!-- Pre-populated / dynamic weapon rows -->
+            </tbody>
+        </table>
+    </div>
+    <div class="weapons-actions">
+        <button type="button" class="btn-add-weapon" onclick="addWeaponRow()" data-i18n="btn_add_weapon">➕ Add Weapon</button>
+    </div>
+
+    <!-- Skills Section -->
+    <div class="section-title">
+        <span data-i18n="sec_skills">Investigator Skills</span>
+        <span class="section-hint" data-i18n="hint_dev_box">☑ = Development / Experiencia</span>
+    </div>
+    <div class="skills-toolbar">
+        <input type="text" id="skillSearch" placeholder="🔍 Search skill..." oninput="filterSkills()">
+        <span class="count" id="skillCount"></span>
+    </div>
     <div class="grid-3" id="skills-container"></div>
+</div>
+
+<!-- Save Modal -->
+<div id="saveModal" class="modal">
+    <div class="modal-content">
+        <h3 data-i18n="modal_save_title">Save to Database</h3>
+        <p><strong id="saveCharNameDisplay"></strong></p>
+        <p data-i18n="modal_save_prompt">Enter a PIN or password to protect your character:</p>
+        <input type="password" id="savePin" placeholder="PIN / Password" autocomplete="off">
+        <div class="modal-buttons">
+            <button type="button" onclick="executeSave()" style="background-color: var(--accent-green);" data-i18n="btn_save_confirm">Save</button>
+            <button type="button" onclick="closeModal('saveModal')" style="background-color: #7f8c8d;" data-i18n="btn_cancel">Cancel</button>
+        </div>
+    </div>
 </div>
 
 <!-- Load Modal -->
 <div id="loadModal" class="modal">
     <div class="modal-content">
-        <h3>Select Character to Load</h3>
+        <h3 data-i18n="modal_load_title">Select Character to Load</h3>
         <select id="charSelect"><option>Loading characters...</option></select>
-        <input type="password" id="loadPin" placeholder="Enter PIN / Password">
+        <input type="password" id="loadPin" placeholder="Enter PIN / Password" autocomplete="off">
         <div class="modal-buttons">
-            <button onclick="executeLoad()">Load</button>
-            <button onclick="closeModal()" style="background-color: #7f8c8d;">Cancel</button>
+            <button type="button" onclick="executeLoad()" style="background-color: var(--accent-blue);" data-i18n="btn_load_confirm">Load</button>
+            <button type="button" onclick="closeModal('loadModal')" style="background-color: #7f8c8d;" data-i18n="btn_cancel">Cancel</button>
         </div>
     </div>
 </div>
 
+<!-- Toast notification popup -->
+<div id="toast"></div>
+
 <script>
-    // FIX: Render UI logic first so HTML works even if Database fails.
     let currentLang = 'en';
+    let supabaseClient = null;
 
     const dict = {
-        "en": { "title": "Call of Cthulhu - 7th Edition", "btn_save": "☁️ Save to DB", "btn_load": "☁️ Load from DB", "btn_clear": "🗑️ New / Clear", "sec_investigator": "Investigator Data", "sec_characteristics": "Characteristics", "sec_status": "Status Metrics", "sec_skills": "Skills", "lbl_name": "Name", "lbl_player": "Player", "lbl_occupation": "Occupation", "lbl_age": "Age", "stat_str": "STR", "stat_dex": "DEX", "stat_int": "INT", "stat_con": "CON", "stat_app": "APP", "stat_pow": "POW", "stat_siz": "SIZ", "stat_edu": "EDU", "stat_hp": "Hit Points", "stat_san": "Sanity", "stat_mp": "Magic Points", "stat_luck": "Luck", "stat_move": "Move Rate", "stat_build": "Build" },
-        "es": { "title": "La Llamada de Cthulhu - 7ª Edición", "btn_save": "☁️ Guardar en BD", "btn_load": "☁️ Cargar de BD", "btn_clear": "🗑️ Nuevo / Limpiar", "sec_investigator": "Datos del Investigador", "sec_characteristics": "Características", "sec_status": "Métricas de Estado", "sec_skills": "Habilidades", "lbl_name": "Nombre", "lbl_player": "Jugador", "lbl_occupation": "Ocupación", "lbl_age": "Edad", "stat_str": "FUE", "stat_dex": "DES", "stat_int": "INT", "stat_con": "CON", "stat_app": "APA", "stat_pow": "POD", "stat_siz": "TAM", "stat_edu": "EDU", "stat_hp": "Puntos de Vida", "stat_san": "Cordura", "stat_mp": "Puntos Magia", "stat_luck": "Suerte", "stat_move": "Movimiento", "stat_build": "Corpulencia" }
+        "en": {
+            "title": "Call of Cthulhu - 7th Edition",
+            "btn_save": "☁️ Save to Database",
+            "btn_load": "☁️ Load from Database",
+            "btn_clear": "🗑️ New / Clear",
+            "sec_investigator": "Investigator Data",
+            "sec_characteristics": "Characteristics",
+            "sec_status": "Status & Trackers",
+            "sec_combat": "Combat & Weapons",
+            "sec_skills": "Investigator Skills",
+            "lbl_name": "Name",
+            "lbl_player": "Player",
+            "lbl_occupation": "Occupation",
+            "lbl_age": "Age",
+            "lbl_gender": "Gender",
+            "lbl_residence": "Residence",
+            "lbl_birthplace": "Birthplace",
+            "lbl_idea": "Idea",
+            "lbl_know": "Know",
+            "lbl_cur": "Cur:",
+            "lbl_max": "Max:",
+            "lbl_start": "Start:",
+            "lbl_half": "½:",
+            "lbl_fifth": "⅕:",
+            "lbl_delta": "Delta:",
+            "stat_str": "STR",
+            "stat_dex": "DEX",
+            "stat_int": "INT",
+            "stat_con": "CON",
+            "stat_app": "APP",
+            "stat_pow": "POW",
+            "stat_siz": "SIZ",
+            "stat_edu": "EDU",
+            "stat_hp": "Hit Points",
+            "stat_san": "Sanity",
+            "stat_mp": "Magic Points",
+            "stat_luck": "Luck",
+            "stat_build": "Build (Corpulencia)",
+            "stat_db": "Damage Bonus (DB)",
+            "stat_combat_dodge": "Dodge (Esquivar)",
+            "hint_char_triad": "Standard / Hard (½) / Extreme (⅕)",
+            "hint_trackers": "Click numbers in grid or use Delta [+ / −] to adjust",
+            "hint_combat": "Damage Bonus, Build, Dodge & Weapons",
+            "hint_dev_box": "☑ = Development Check / Experiencia",
+            "cond_major_wound": "Major Wound (Herida Grave)",
+            "cond_unconscious": "Unconscious (Inconsciente)",
+            "cond_dying": "Dying (Moribundo)",
+            "cond_temp_insane": "Temp. Insane (Locura Temporal)",
+            "cond_indef_insane": "Indef. Insane (Locura Indefinida)",
+            "cond_loco": "Permanently Insane (Loco)",
+            "cond_luck_spent": "Luck Spent (Suerte Agotada)",
+            "th_weapon": "Weapon",
+            "th_regular": "Regular",
+            "th_hard": "Hard (½)",
+            "th_extreme": "Ext (⅕)",
+            "th_damage": "Damage",
+            "th_range": "Range",
+            "th_attacks": "Attacks",
+            "th_ammo": "Ammo",
+            "th_malf": "Malf",
+            "btn_add_weapon": "➕ Add Weapon",
+            "modal_save_title": "Save to Database",
+            "modal_save_prompt": "Enter a PIN or password to protect your character:",
+            "btn_save_confirm": "Save",
+            "btn_load_confirm": "Load",
+            "btn_cancel": "Cancel",
+            "modal_load_title": "Select Character to Load",
+            "search_placeholder": "🔍 Search skill..."
+        },
+        "es": {
+            "title": "La Llamada de Cthulhu - 7ª Edición",
+            "btn_save": "☁️ Guardar en BD",
+            "btn_load": "☁️ Cargar de BD",
+            "btn_clear": "🗑️ Nuevo / Limpiar",
+            "sec_investigator": "Datos del Investigador",
+            "sec_characteristics": "Características",
+            "sec_status": "Estado y Contadores",
+            "sec_combat": "Combate y Armas",
+            "sec_skills": "Habilidades del Investigador",
+            "lbl_name": "Nombre",
+            "lbl_player": "Jugador",
+            "lbl_occupation": "Ocupación",
+            "lbl_age": "Edad",
+            "lbl_gender": "Género",
+            "lbl_residence": "Lugar de Residencia",
+            "lbl_birthplace": "Lugar de Nacimiento",
+            "lbl_idea": "Idea",
+            "lbl_know": "Conocimiento",
+            "lbl_cur": "Actual:",
+            "lbl_max": "Máx:",
+            "lbl_start": "Inicio:",
+            "lbl_half": "½:",
+            "lbl_fifth": "⅕:",
+            "lbl_delta": "Ajuste:",
+            "stat_str": "FUE",
+            "stat_dex": "DES",
+            "stat_int": "INT",
+            "stat_con": "CON",
+            "stat_app": "APA",
+            "stat_pow": "POD",
+            "stat_siz": "TAM",
+            "stat_edu": "EDU",
+            "stat_hp": "Puntos de Vida",
+            "stat_san": "Cordura",
+            "stat_mp": "Puntos Magia",
+            "stat_luck": "Suerte",
+            "stat_build": "Corpulencia",
+            "stat_db": "Bonif. Daño (BD)",
+            "stat_combat_dodge": "Esquivar",
+            "hint_char_triad": "Normal / Difícil (½) / Extremo (⅕)",
+            "hint_trackers": "Haz clic en la grilla o usa Ajuste [+ / −] para modificar",
+            "hint_combat": "Bonificación de daño, corpulencia, esquivar y armas",
+            "hint_dev_box": "☑ = Marca de desarrollo (éxito en sesión)",
+            "cond_major_wound": "Herida Grave",
+            "cond_unconscious": "Inconsciente",
+            "cond_dying": "Moribundo",
+            "cond_temp_insane": "Locura Temporal",
+            "cond_indef_insane": "Locura Indefinida",
+            "cond_loco": "Loco (Incurable)",
+            "cond_luck_spent": "Suerte Agotada",
+            "th_weapon": "Arma",
+            "th_regular": "Normal",
+            "th_hard": "Difícil (½)",
+            "th_extreme": "Extr (⅕)",
+            "th_damage": "Daño",
+            "th_range": "Alcance",
+            "th_attacks": "Ataques",
+            "th_ammo": "Munición",
+            "th_malf": "Avería",
+            "btn_add_weapon": "➕ Añadir Arma",
+            "modal_save_title": "Guardar en Base de Datos",
+            "modal_save_prompt": "Introduce un PIN o contraseña para proteger tu ficha:",
+            "btn_save_confirm": "Guardar",
+            "btn_load_confirm": "Cargar",
+            "btn_cancel": "Cancelar",
+            "modal_load_title": "Selecciona Personaje para Cargar",
+            "search_placeholder": "🔍 Buscar habilidad..."
+        }
     };
 
     const skillsData = [
-        { id: "brawl", en: "Fighting: Brawl (25%)", es: "Pelea (25%)" },
-        { id: "handgun", en: "Firearms: Handgun (20%)", es: "Armas: Cortas (20%)" },
-        { id: "spot", en: "Spot Hidden (25%)", es: "Descubrir (25%)" },
-        { id: "stealth", en: "Stealth (20%)", es: "Sigilo (20%)" },
-        { id: "library", en: "Library Use (20%)", es: "Uso de Biblioteca (20%)" },
-        { id: "persuade", en: "Persuade (10%)", es: "Persuadir (10%)" }
-    ]; // Add any additional skills to this array
+        { id: "anthropology", en: "Anthropology (01%)", es: "Antropología (01%)", base: 1 },
+        { id: "archaeology", en: "Archaeology (01%)", es: "Arqueología (01%)", base: 1 },
+        { id: "art_craft_1", en: "Art (05%):", es: "Arte (05%):", base: 5, isCustomName: true, defaultName: "Pintura / Paint" },
+        { id: "art_craft_2", en: "Art (05%):", es: "Arte (05%):", base: 5, isCustomName: true, defaultName: "Foto / Photo" },
+        { id: "brawl", en: "Fighting: Brawl (25%)", es: "Combatir: Pelea (25%)", base: 25 },
+        { id: "fighting_spec", en: "Fighting Esp (25%):", es: "Combatir Esp (25%):", base: 25, isCustomName: true, defaultName: "Espada / Sword" },
+        { id: "handgun", en: "Firearms: Handgun (20%)", es: "Armas: Corta (20%)", base: 20 },
+        { id: "rifle_shotgun", en: "Firearms: Rifle (25%)", es: "Armas: Fusil (25%)", base: 25 },
+        { id: "first_aid", en: "First Aid (30%)", es: "Primeros Aux. (30%)", base: 30 },
+        { id: "history", en: "History (05%)", es: "Historia (05%)", base: 5 },
+        { id: "intimidate", en: "Intimidate (15%)", es: "Intimidar (15%)", base: 15 },
+        { id: "jump", en: "Jump (20%)", es: "Saltar (20%)", base: 20 },
+        { id: "lang_own", en: "Lang: Own (EDU):", es: "Lengua Propia:", baseSpecial: "edu", isCustomName: true, defaultName: "Inglés / English" },
+        { id: "lang_other_1", en: "Lang: Other (01%):", es: "Otra Lengua:", base: 1, isCustomName: true, defaultName: "Latín / Latin" },
+        { id: "lang_other_2", en: "Lang: Other (01%):", es: "Otra Lengua:", base: 1, isCustomName: true, defaultName: "Jeroglíficos" },
+        { id: "law", en: "Law (05%)", es: "Derecho (05%)", base: 5 },
+        { id: "library", en: "Library Use (20%)", es: "Buscar Libros (20%)", base: 20 },
+        { id: "listen", en: "Listen (20%)", es: "Escuchar (20%)", base: 20 },
+        { id: "locksmith", en: "Locksmith (01%)", es: "Cerrajería (01%)", base: 1 },
+        { id: "mech_repair", en: "Mechanical Repair (10%)", es: "Mecánica (10%)", base: 10 },
+        { id: "medicine", en: "Medicine (01%)", es: "Medicina (01%)", base: 1 },
+        { id: "natural_world", en: "Natural World (10%)", es: "Naturaleza (10%)", base: 10 },
+        { id: "navigate", en: "Navigate (10%)", es: "Orientarse (10%)", base: 10 },
+        { id: "occult", en: "Occult (05%)", es: "Ciencias Ocultas (05%)", base: 5 },
+        { id: "op_heavy_mach", en: "Heavy Machinery (01%)", es: "Maquinaria (01%)", base: 1 },
+        { id: "persuade", en: "Persuade (10%)", es: "Persuasión (10%)", base: 10 },
+        { id: "pilot", en: "Pilot (01%)", es: "Pilotar (01%)", base: 1 },
+        { id: "psychoanalysis", en: "Psychoanalysis (01%)", es: "Psicoanálisis (01%)", base: 1 },
+        { id: "psychology", en: "Psychology (10%)", es: "Psicología (10%)", base: 10 },
+        { id: "ride", en: "Ride (05%)", es: "Equitación (05%)", base: 5 },
+        { id: "science_1", en: "Science (01%):", es: "Ciencia (01%):", base: 1, isCustomName: true, defaultName: "Geología" },
+        { id: "science_2", en: "Science (01%):", es: "Ciencia (01%):", base: 1, isCustomName: true, defaultName: "Química" },
+        { id: "sleight_of_hand", en: "Sleight of Hand (10%)", es: "Juego Manos (10%)", base: 10 },
+        { id: "spot", en: "Spot Hidden (25%)", es: "Descubrir (25%)", base: 25 },
+        { id: "stealth", en: "Stealth (20%)", es: "Sigilo (20%)", base: 20 },
+        { id: "survival", en: "Survival (10%):", es: "Supervivencia:", base: 10, isCustomName: true, defaultName: "Desierto" },
+        { id: "swim", en: "Swim (20%)", es: "Nadar (20%)", base: 20 },
+        { id: "throw", en: "Throw (20%)", es: "Lanzar (20%)", base: 20 },
+        { id: "track", en: "Track (10%)", es: "Seguir Rastros (10%)", base: 10 },
+        { id: "accounting", en: "Accounting (05%)", es: "Contabilidad (05%)", base: 5 },
+        { id: "appraise", en: "Appraise (05%)", es: "Tasación (05%)", base: 5 },
+        { id: "charm", en: "Charm (15%)", es: "Encanto (15%)", base: 15 },
+        { id: "climb", en: "Climb (20%)", es: "Trepar (20%)", base: 20 },
+        { id: "credit_rating", en: "Credit Rating (00%)", es: "Crédito (00%)", base: 0 },
+        { id: "cthulhu_mythos", en: "Cthulhu Mythos (00%)", es: "Mitos Cthulhu (00%)", base: 0 },
+        { id: "disguise", en: "Disguise (05%)", es: "Disfrazarse (05%)", base: 5 },
+        { id: "dodge", en: "Dodge (DEX/2)", es: "Esquivar (DES/2)", baseSpecial: "dex_half" },
+        { id: "drive_auto", en: "Drive Auto (20%)", es: "Conducir Auto (20%)", base: 20 },
+        { id: "elec_repair", en: "Electrical Repair (10%)", es: "Electricidad (10%)", base: 10 },
+        { id: "fast_talk", en: "Fast Talk (05%)", es: "Charlatanería (05%)", base: 5 }
+    ];
 
+    let weaponRowCount = 0;
+
+    function showToast(message, type = 'info') {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        toast.className = type;
+        toast.innerText = message;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 3500);
+    }
+
+    // --- TRACKER GRID GENERATOR & INTERACTION ---
+    function pad2(num) {
+        return num < 10 ? '0' + num : '' + num;
+    }
+
+    function initAllGrids() {
+        buildGrid('hp', 0, 24);
+        buildGrid('mp', 0, 24);
+        buildGrid('san', 1, 99);
+        buildGrid('luck', 1, 99);
+    }
+
+    function buildGrid(type, min, max) {
+        const container = document.getElementById(`grid_${type}`);
+        if (!container) return;
+        container.innerHTML = '';
+        for (let i = min; i <= max; i++) {
+            const span = document.createElement('span');
+            span.className = 'grid-num';
+            span.id = `cell_${type}_${i}`;
+            span.dataset.val = i;
+            span.dataset.type = type;
+            span.innerText = pad2(i);
+            span.onclick = function() {
+                setTrackerValue(type, i);
+            };
+            container.appendChild(span);
+        }
+    }
+
+    function getTrackerInput(type) {
+        if (type === 'luck') return document.getElementById('luck');
+        return document.getElementById(`${type}_current`);
+    }
+
+    function setTrackerValue(type, val) {
+        const input = getTrackerInput(type);
+        if (input) {
+            input.value = val;
+            updateGridHighlight(type, val);
+            input.dispatchEvent(new Event('input'));
+        }
+    }
+
+    function onTrackerInput(type) {
+        const input = getTrackerInput(type);
+        const val = parseInt(input ? input.value : 0);
+        updateGridHighlight(type, isNaN(val) ? -1 : val);
+    }
+
+    function applyDelta(type, sign) {
+        const deltaInput = document.getElementById(`${type}_delta`);
+        let amount = parseInt(deltaInput ? deltaInput.value : '');
+        if (isNaN(amount) || amount <= 0) amount = 1;
+
+        const curInput = getTrackerInput(type);
+        if (!curInput) return;
+        let cur = parseInt(curInput.value);
+        if (isNaN(cur)) cur = 0;
+
+        cur = cur + (sign * amount);
+        if (cur < 0) cur = 0;
+
+        // Boundaries
+        if (type === 'hp') {
+            const max = parseInt(document.getElementById('hp_max')?.value) || 99;
+            if (cur > max) cur = max;
+        } else if (type === 'mp') {
+            const max = parseInt(document.getElementById('mp_max')?.value) || 99;
+            if (cur > max) cur = max;
+        } else if (type === 'san') {
+            const max = parseInt(document.getElementById('san_max')?.value) || 99;
+            if (cur > max) cur = max;
+        } else if (type === 'luck') {
+            if (cur > 99) cur = 99;
+        }
+
+        curInput.value = cur;
+        if (deltaInput) deltaInput.value = '';
+        updateGridHighlight(type, cur);
+        curInput.dispatchEvent(new Event('input'));
+    }
+
+    function applyDirectDelta(type, step) {
+        const curInput = getTrackerInput(type);
+        if (!curInput) return;
+        let cur = parseInt(curInput.value);
+        if (isNaN(cur)) cur = 0;
+        cur += step;
+        if (cur < 0) cur = 0;
+
+        if (type === 'hp') {
+            const max = parseInt(document.getElementById('hp_max')?.value) || 99;
+            if (cur > max) cur = max;
+        } else if (type === 'mp') {
+            const max = parseInt(document.getElementById('mp_max')?.value) || 99;
+            if (cur > max) cur = max;
+        } else if (type === 'san') {
+            const max = parseInt(document.getElementById('san_max')?.value) || 99;
+            if (cur > max) cur = max;
+        } else if (type === 'luck') {
+            if (cur > 99) cur = 99;
+        }
+
+        curInput.value = cur;
+        updateGridHighlight(type, cur);
+        curInput.dispatchEvent(new Event('input'));
+    }
+
+    function resetToMax(type) {
+        const maxInput = document.getElementById(`${type}_max`);
+        const curInput = getTrackerInput(type);
+        if (maxInput && curInput && maxInput.value !== "") {
+            curInput.value = maxInput.value;
+            updateGridHighlight(type, parseInt(maxInput.value));
+            curInput.dispatchEvent(new Event('input'));
+        }
+    }
+
+    function updateGridHighlight(type, curVal) {
+        const container = document.getElementById(`grid_${type}`);
+        if (!container) return;
+
+        let maxVal = 999;
+        if (type === 'hp') maxVal = parseInt(document.getElementById('hp_max')?.value) || 999;
+        else if (type === 'mp') maxVal = parseInt(document.getElementById('mp_max')?.value) || 999;
+        else if (type === 'san') maxVal = parseInt(document.getElementById('san_max')?.value) || 999;
+
+        container.querySelectorAll('.grid-num').forEach(cell => {
+            const val = parseInt(cell.dataset.val);
+            cell.classList.remove('active', 'over-max');
+            if (val === curVal) {
+                cell.classList.add('active');
+                cell.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            }
+            if (val > maxVal) {
+                cell.classList.add('over-max');
+            }
+        });
+    }
+
+    function updateAllGrids() {
+        ['hp', 'mp', 'san', 'luck'].forEach(type => {
+            const input = getTrackerInput(type);
+            const val = parseInt(input ? input.value : -1);
+            if (!isNaN(val)) updateGridHighlight(type, val);
+        });
+    }
+
+    // --- SKILLS & LOCALIZATION ---
     function renderSkills() {
         const container = document.getElementById('skills-container');
+        if (!container) return;
         container.innerHTML = ""; 
         skillsData.forEach(skill => {
+            const baseVal = (skill.base !== undefined) ? skill.base : '';
+            let labelHtml = '';
+            if (skill.isCustomName) {
+                labelHtml = `
+                    <label id="lbl_${skill.id}">${skill[currentLang]}</label>
+                    <input type="text" id="spec_${skill.id}" class="custom-name" placeholder="${skill.defaultName}">`;
+            } else {
+                labelHtml = `<label id="lbl_${skill.id}" title="${skill[currentLang]}">${skill[currentLang]}</label>`;
+            }
+
             container.innerHTML += `
-                <div class="skill-row"><label id="lbl_${skill.id}">${skill[currentLang]}</label>
-                <div class="stat-group"><input type="number" id="skill_${skill.id}" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div></div>`;
+                <div class="skill-row" data-skill-id="${skill.id}">
+                    <input type="checkbox" id="dev_${skill.id}" class="dev-check" title="Development Check">
+                    <div class="skill-title-wrap">
+                        ${labelHtml}
+                    </div>
+                    <div class="stat-group">
+                        <input type="number" id="skill_${skill.id}" class="base auto-calc" value="${baseVal}" data-default="${skill.base || 0}">
+                        <input type="number" readonly class="derived half" tabindex="-1">
+                        <input type="number" readonly class="derived fifth" tabindex="-1">
+                    </div>
+                </div>`;
         });
+        
+        container.querySelectorAll('.auto-calc').forEach(input => {
+            updateHalvesAndFifths(input);
+        });
+
+        updateSkillCount();
         attachCalcListeners();
+    }
+
+    function filterSkills() {
+        const query = (document.getElementById('skillSearch')?.value || '').toLowerCase().trim();
+        let visibleCount = 0;
+        document.querySelectorAll('.skill-row').forEach(row => {
+            const label = row.querySelector('label')?.innerText.toLowerCase() || '';
+            const customSpec = row.querySelector('.custom-name')?.value.toLowerCase() || '';
+            if (!query || label.includes(query) || customSpec.includes(query)) {
+                row.style.display = 'flex';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        updateSkillCount(visibleCount, query.length > 0);
+    }
+
+    function updateSkillCount(count = skillsData.length, isFiltered = false) {
+        const el = document.getElementById('skillCount');
+        if (!el) return;
+        el.innerText = isFiltered ? `${count} / ${skillsData.length}` : `${skillsData.length} skills`;
+    }
+
+    // Weapons management
+    function addWeaponRow(data = {}) {
+        const tbody = document.getElementById('weapons-tbody');
+        if (!tbody) return;
+        const idx = weaponRowCount++;
+        const tr = document.createElement('tr');
+        tr.id = `weapon_row_${idx}`;
+        tr.innerHTML = `
+            <td><input type="text" id="wpn_name_${idx}" class="weapon-name" placeholder="Weapon Name" value="${data.name || ''}"></td>
+            <td><input type="number" id="wpn_reg_${idx}" class="auto-calc-wpn" value="${data.reg || ''}" oninput="updateWeaponHalves(this, ${idx})"></td>
+            <td><input type="number" id="wpn_half_${idx}" readonly class="derived" value="${data.half || ''}"></td>
+            <td><input type="number" id="wpn_ext_${idx}" readonly class="derived" value="${data.ext || ''}"></td>
+            <td><input type="text" id="wpn_dmg_${idx}" placeholder="1D6+DB" value="${data.dmg || ''}"></td>
+            <td><input type="text" id="wpn_rng_${idx}" placeholder="Touch / 15m" value="${data.rng || ''}"></td>
+            <td><input type="text" id="wpn_att_${idx}" placeholder="1" value="${data.att || ''}"></td>
+            <td><input type="text" id="wpn_ammo_${idx}" placeholder="-" value="${data.ammo || ''}"></td>
+            <td><input type="text" id="wpn_malf_${idx}" placeholder="100" value="${data.malf || ''}"></td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    function updateWeaponHalves(input, idx) {
+        const val = parseInt(input.value);
+        const halfEl = document.getElementById(`wpn_half_${idx}`);
+        const extEl = document.getElementById(`wpn_ext_${idx}`);
+        if (halfEl) halfEl.value = (isNaN(val) || input.value === "") ? "" : Math.floor(val / 2);
+        if (extEl) extEl.value = (isNaN(val) || input.value === "") ? "" : Math.floor(val / 5);
+    }
+
+    function initDefaultWeapons() {
+        const tbody = document.getElementById('weapons-tbody');
+        if (!tbody || tbody.children.length > 0) return;
+        addWeaponRow({ name: currentLang === 'es' ? 'Desarmado (Pelea)' : 'Unarmed (Brawl)', reg: 25, half: 12, ext: 5, dmg: '1D3 + BD', rng: 'Touch', att: '1', ammo: '-', malf: '-' });
+        addWeaponRow({ name: '.45 Automática', reg: 20, half: 10, ext: 4, dmg: '1D10+2', rng: '15m', att: '1(3)', ammo: '7', malf: '100' });
+        addWeaponRow({ name: 'Cuchillo / Panga', reg: 25, half: 12, ext: 5, dmg: '1D8 + BD', rng: 'Touch', att: '1', ammo: '-', malf: '-' });
     }
 
     function toggleLanguage() {
         currentLang = currentLang === 'en' ? 'es' : 'en';
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
-            if (dict[currentLang][key]) {
+            if (dict[currentLang] && dict[currentLang][key]) {
                 if (el.tagName === 'INPUT') el.placeholder = dict[currentLang][key];
                 else el.innerText = dict[currentLang][key];
             }
         });
-        skillsData.forEach(skill => { const label = document.getElementById(`lbl_${skill.id}`); if(label) label.innerText = skill[currentLang]; });
+        const searchInput = document.getElementById('skillSearch');
+        if (searchInput) searchInput.placeholder = dict[currentLang]["search_placeholder"];
+        
+        skillsData.forEach(skill => {
+            const label = document.getElementById(`lbl_${skill.id}`);
+            if (label) {
+                label.innerText = skill[currentLang];
+                label.title = skill[currentLang];
+            }
+        });
+        filterSkills();
     }
 
     function attachCalcListeners() {
         document.querySelectorAll('.auto-calc').forEach(input => {
-            input.addEventListener('input', function() {
-                let val = parseInt(this.value) || 0;
-                let group = this.parentElement;
-                let halfInput = group.querySelector('.half');
-                let fifthInput = group.querySelector('.fifth');
-                if(halfInput) halfInput.value = this.value === "" ? "" : Math.floor(val / 2);
-                if(fifthInput) fifthInput.value = this.value === "" ? "" : Math.floor(val / 5);
-            });
+            input.removeEventListener('input', onAutoCalcInput);
+            input.addEventListener('input', onAutoCalcInput);
         });
+    }
+
+    function onAutoCalcInput() {
+        updateHalvesAndFifths(this);
+        calculateDerivedStats();
+    }
+
+    function updateHalvesAndFifths(inputElement) {
+        if (!inputElement) return;
+        let val = parseInt(inputElement.value);
+        let group = inputElement.parentElement;
+        if (!group) return;
+        let halfInput = group.querySelector('.half');
+        let fifthInput = group.querySelector('.fifth');
+        if (halfInput) halfInput.value = (isNaN(val) || inputElement.value === "") ? "" : Math.floor(val / 2);
+        if (fifthInput) fifthInput.value = (isNaN(val) || inputElement.value === "") ? "" : Math.floor(val / 5);
+    }
+
+    // --- DERIVATION OF STATS & LIMITS ---
+    function calculateDerivedStats() {
+        const str = parseInt(document.getElementById('str')?.value) || 0;
+        const dex = parseInt(document.getElementById('dex')?.value) || 0;
+        const intVal = parseInt(document.getElementById('int')?.value) || 0;
+        const con = parseInt(document.getElementById('con')?.value) || 0;
+        const pow = parseInt(document.getElementById('pow')?.value) || 0;
+        const siz = parseInt(document.getElementById('siz')?.value) || 0;
+        const edu = parseInt(document.getElementById('edu')?.value) || 0;
+        const age = parseInt(document.getElementById('age')?.value) || 0;
+
+        // 1. Max HP = floor((CON + SIZ) / 10)
+        if (con > 0 && siz > 0) {
+            const hpMax = Math.floor((con + siz) / 10);
+            const hpMaxEl = document.getElementById('hp_max');
+            const hpCurEl = document.getElementById('hp_current');
+            if (hpMaxEl) hpMaxEl.value = hpMax;
+            if (hpCurEl && !hpCurEl.value) {
+                hpCurEl.value = hpMax;
+            }
+            updateGridHighlight('hp', parseInt(hpCurEl?.value || hpMax));
+        }
+
+        // 2. Magic Points = floor(POW / 5)
+        if (pow > 0) {
+            const mpMax = Math.floor(pow / 5);
+            const mpMaxEl = document.getElementById('mp_max');
+            const mpCurEl = document.getElementById('mp_current');
+            if (mpMaxEl) mpMaxEl.value = mpMax;
+            if (mpCurEl && !mpCurEl.value) {
+                mpCurEl.value = mpMax;
+            }
+            updateGridHighlight('mp', parseInt(mpCurEl?.value || mpMax));
+
+            // Starting Sanity = POW
+            const sanStartEl = document.getElementById('san_start');
+            const sanCurEl = document.getElementById('san_current');
+            if (sanStartEl) sanStartEl.value = pow;
+            if (sanCurEl && !sanCurEl.value) {
+                sanCurEl.value = pow;
+            }
+            updateGridHighlight('san', parseInt(sanCurEl?.value || pow));
+        }
+
+        // 3. Max Sanity = 99 - Cthulhu Mythos
+        const mythosVal = parseInt(document.getElementById('skill_cthulhu_mythos')?.value) || 0;
+        const maxSanEl = document.getElementById('san_max');
+        if (maxSanEl) {
+            maxSanEl.value = 99 - mythosVal;
+        }
+        const curSan = parseInt(document.getElementById('san_current')?.value);
+        if (!isNaN(curSan)) updateGridHighlight('san', curSan);
+
+        // 4. Damage Bonus (DB) & Build based on STR + SIZ
+        if (str > 0 && siz > 0) {
+            const total = str + siz;
+            let db = "0";
+            let build = 0;
+            if (total <= 64) { db = "-2"; build = -2; }
+            else if (total <= 84) { db = "-1"; build = -1; }
+            else if (total <= 124) { db = "0"; build = 0; }
+            else if (total <= 164) { db = "+1D4"; build = 1; }
+            else if (total <= 204) { db = "+1D6"; build = 2; }
+            else if (total <= 284) { db = "+2D6"; build = 3; }
+            else {
+                const extra = Math.floor((total - 284) / 80) + 1;
+                db = `+${2 + extra}D6`;
+                build = 3 + extra;
+            }
+            const dbEl = document.getElementById('damage_bonus');
+            const buildEl = document.getElementById('build');
+            if (dbEl) dbEl.value = db;
+            if (buildEl) buildEl.value = build;
+        }
+
+        // 5. Dynamic skill bases: Dodge (DEX/2) and Language Own (EDU)
+        if (dex > 0) {
+            const dodgeVal = Math.floor(dex / 2);
+            const dodgeEl = document.getElementById('skill_dodge');
+            if (dodgeEl && (!dodgeEl.value || dodgeEl.dataset.custom !== "true")) {
+                dodgeEl.value = dodgeVal;
+                updateHalvesAndFifths(dodgeEl);
+            }
+            // Update combat dodge mirror
+            const combatDodgeEl = document.getElementById('combat_dodge');
+            if (combatDodgeEl) {
+                combatDodgeEl.value = dodgeEl ? dodgeEl.value : dodgeVal;
+                updateHalvesAndFifths(combatDodgeEl);
+            }
+        }
+
+        if (edu > 0) {
+            const langOwnEl = document.getElementById('skill_lang_own');
+            if (langOwnEl && (!langOwnEl.value || langOwnEl.dataset.custom !== "true")) {
+                langOwnEl.value = edu;
+                updateHalvesAndFifths(langOwnEl);
+            }
+        }
+
+        // Luck grid update
+        const curLuck = parseInt(document.getElementById('luck')?.value);
+        if (!isNaN(curLuck)) updateGridHighlight('luck', curLuck);
     }
 
     function clearSheet() {
-        if(confirm(currentLang === 'en' ? "Clear sheet?" : "¿Limpiar ficha?")) {
-            document.querySelectorAll('input:not([type="file"])').forEach(input => { input.value = ''; input.dispatchEvent(new Event('input')); });
+        if (confirm(currentLang === 'en' ? "Clear entire sheet?" : "¿Limpiar toda la ficha?")) {
+            document.querySelectorAll('input:not([type="checkbox"])').forEach(input => {
+                input.value = '';
+                delete input.dataset.custom;
+            });
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => { cb.checked = false; });
+            document.querySelectorAll('.derived').forEach(input => { input.value = ''; });
+            document.getElementById('weapons-tbody').innerHTML = '';
+            weaponRowCount = 0;
+            initDefaultWeapons();
+            renderSkills();
+            updateAllGrids();
+            showToast(currentLang === 'en' ? "Sheet cleared" : "Ficha limpiada", "info");
         }
     }
 
-    // Initialize UI instantly
-    renderSkills();
-
-    // --- SUPABASE SETUP ---
-    // Make sure you keep the SINGLE QUOTES around your keys here
-    let supabase;
-    try {
-        const _supabaseUrl = 'https://woncmedruwdkynifluhh.supabase.co/rest/v1/';
-        const _supabaseKey = 'sb_publishable_H9v99xDm0xCIfYBAtFbJTw_y3WNz3vk';
-        supabase = window.supabase.createClient(_supabaseUrl, _supabaseKey);
-    } catch(err) {
-        console.error("Supabase failed to initialize. Check quotes around your API keys.");
+    // Modal helpers
+    function openModal(id) {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'flex';
     }
 
-    async function saveToDB() {
-        if(!supabase) return alert("Database connection failed. Please check your API keys in the code.");
-        const charName = document.getElementById('charName').value.trim();
-        if(!charName) return alert("Please enter a Character Name first!");
-        
-        const pin = prompt("Enter a PIN/Password to secure this character:");
-        if(!pin) return;
+    function closeModal(id) {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    }
 
-        const data = {};
-        document.querySelectorAll('input:not(.derived)').forEach(input => {
-            if (input.id && input.type !== 'password') data[input.id] = input.value;
+    window.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+        }
+    });
+
+    function openSaveModal() {
+        if (!supabaseClient) return showToast("Database not initialized.", "error");
+        const charName = (document.getElementById('charName')?.value || '').trim();
+        if (!charName) return showToast(currentLang === 'en' ? "Please enter a Character Name first!" : "¡Introduce primero el Nombre del Personaje!", "error");
+
+        const displayEl = document.getElementById('saveCharNameDisplay');
+        if (displayEl) displayEl.innerText = charName;
+        const pinEl = document.getElementById('savePin');
+        if (pinEl) pinEl.value = '';
+        openModal('saveModal');
+        setTimeout(() => document.getElementById('savePin')?.focus(), 100);
+    }
+
+    async function executeSave() {
+        const charName = (document.getElementById('charName')?.value || '').trim();
+        const pin = (document.getElementById('savePin')?.value || '').trim();
+        if (!pin) return showToast(currentLang === 'en' ? "Please enter a PIN/password." : "Por favor introduce un PIN o contraseña.", "error");
+
+        closeModal('saveModal');
+        showToast(currentLang === 'en' ? "Saving character..." : "Guardando personaje...", "info");
+
+        const data = {
+            fields: {},
+            weapons: []
+        };
+
+        // Collect all standard fields & checkboxes
+        document.querySelectorAll('input:not(.derived), select').forEach(input => {
+            if (input.id && input.type !== 'password' && !input.id.startsWith('wpn_') && !input.id.endsWith('_delta')) {
+                data.fields[input.id] = input.type === 'checkbox' ? input.checked : input.value;
+            }
         });
 
-        const { data: existing } = await supabase.from('characters').select('id, char_pin').eq('char_name', charName).single();
-        
-        if (existing) {
-            if (existing.char_pin !== pin) return alert("Incorrect PIN for this character name.");
-            const { error } = await supabase.from('characters').update({ sheet_data: data }).eq('id', existing.id);
-            if (error) alert("Error updating: " + error.message);
-            else alert("Character updated successfully!");
-        } else {
-            const { error } = await supabase.from('characters').insert([{ char_name: charName, char_pin: pin, sheet_data: data }]);
-            if (error) alert("Error saving: " + error.message);
-            else alert("New character saved successfully!");
+        // Collect weapons table
+        for (let i = 0; i < weaponRowCount; i++) {
+            const nameEl = document.getElementById(`wpn_name_${i}`);
+            if (nameEl) {
+                data.weapons.push({
+                    name: nameEl.value,
+                    reg: document.getElementById(`wpn_reg_${i}`)?.value || '',
+                    half: document.getElementById(`wpn_half_${i}`)?.value || '',
+                    ext: document.getElementById(`wpn_ext_${i}`)?.value || '',
+                    dmg: document.getElementById(`wpn_dmg_${i}`)?.value || '',
+                    rng: document.getElementById(`wpn_rng_${i}`)?.value || '',
+                    att: document.getElementById(`wpn_att_${i}`)?.value || '',
+                    ammo: document.getElementById(`wpn_ammo_${i}`)?.value || '',
+                    malf: document.getElementById(`wpn_malf_${i}`)?.value || ''
+                });
+            }
+        }
+
+        try {
+            const { data: existing, error: selectError } = await supabaseClient
+                .from('characters')
+                .select('id, char_pin')
+                .eq('char_name', charName)
+                .maybeSingle();
+
+            if (selectError) {
+                return showToast("Database error: " + selectError.message, "error");
+            }
+
+            if (existing) {
+                if (existing.char_pin !== pin) {
+                    return showToast(currentLang === 'en' ? "Incorrect PIN for this character name." : "PIN incorrecto para este personaje.", "error");
+                }
+                const { error: updateError } = await supabaseClient
+                    .from('characters')
+                    .update({ sheet_data: data })
+                    .eq('id', existing.id);
+
+                if (updateError) showToast("Error updating: " + updateError.message, "error");
+                else showToast(currentLang === 'en' ? "Character updated successfully!" : "¡Personaje actualizado con éxito!", "success");
+            } else {
+                const { error: insertError } = await supabaseClient
+                    .from('characters')
+                    .insert([{ char_name: charName, char_pin: pin, sheet_data: data }]);
+
+                if (insertError) showToast("Error saving: " + insertError.message, "error");
+                else showToast(currentLang === 'en' ? "New character saved successfully!" : "¡Nuevo personaje guardado con éxito!", "success");
+            }
+        } catch(e) {
+            showToast("Unexpected error: " + e.message, "error");
         }
     }
 
     async function openLoadModal() {
-        if(!supabase) return alert("Database connection failed. Please check your API keys in the code.");
-        document.getElementById('loadModal').style.display = 'flex';
+        if (!supabaseClient) return showToast("Database not initialized.", "error");
+        openModal('loadModal');
         const select = document.getElementById('charSelect');
-        select.innerHTML = '<option>Loading...</option>';
-        document.getElementById('loadPin').value = '';
+        if (select) select.innerHTML = '<option>Loading characters...</option>';
+        const loadPinEl = document.getElementById('loadPin');
+        if (loadPinEl) loadPinEl.value = '';
 
-        const { data, error } = await supabase.from('characters').select('id, char_name');
-        if (error) { select.innerHTML = '<option>Error loading list</option>'; return; }
-        
-        select.innerHTML = '<option value="">-- Select a Character --</option>';
-        data.forEach(char => {
-            select.innerHTML += `<option value="${char.id}">${char.char_name}</option>`;
-        });
+        try {
+            const { data, error } = await supabaseClient.from('characters').select('id, char_name');
+            if (error) {
+                if (select) select.innerHTML = '<option>Error loading list</option>';
+                showToast("Error loading list: " + error.message, "error");
+                return;
+            }
+            if (select) {
+                select.innerHTML = '<option value="">-- Select a Character --</option>';
+                data.forEach(char => {
+                    select.innerHTML += `<option value="${char.id}">${char.char_name}</option>`;
+                });
+            }
+        } catch(e) {
+            if (select) select.innerHTML = '<option>Connection error</option>';
+            showToast("Connection error: " + e.message, "error");
+        }
     }
 
-    function closeModal() { document.getElementById('loadModal').style.display = 'none'; }
-
     async function executeLoad() {
-        const id = document.getElementById('charSelect').value;
-        const pin = document.getElementById('loadPin').value;
-        if(!id || !pin) return alert("Select a character and enter the PIN.");
+        const id = document.getElementById('charSelect')?.value;
+        const pin = (document.getElementById('loadPin')?.value || '').trim();
+        if (!id || !pin) return showToast(currentLang === 'en' ? "Select a character and enter the PIN." : "Selecciona un personaje e introduce el PIN.", "error");
 
-        const { data, error } = await supabase.from('characters').select('char_pin, sheet_data').eq('id', id).single();
-        if (error || !data) return alert("Character not found.");
-        
-        if (data.char_pin !== pin) return alert("Incorrect PIN!");
+        showToast(currentLang === 'en' ? "Loading character..." : "Cargando personaje...", "info");
 
-        for (const key in data.sheet_data) {
-            const el = document.getElementById(key);
-            if (el) {
-                el.value = data.sheet_data[key];
-                el.dispatchEvent(new Event('input')); 
+        try {
+            const { data, error } = await supabaseClient
+                .from('characters')
+                .select('char_pin, sheet_data')
+                .eq('id', id)
+                .single();
+
+            if (error || !data) return showToast(currentLang === 'en' ? "Character not found." : "Personaje no encontrado.", "error");
+            if (data.char_pin !== pin) return showToast(currentLang === 'en' ? "Incorrect PIN!" : "¡PIN incorrecto!", "error");
+
+            const sheet = data.sheet_data;
+            const fields = sheet.fields || sheet; // support legacy and new formats
+
+            for (const key in fields) {
+                const el = document.getElementById(key);
+                if (el) {
+                    if (el.type === 'checkbox') {
+                        el.checked = !!fields[key];
+                    } else {
+                        el.value = fields[key];
+                        updateHalvesAndFifths(el);
+                    }
+                }
             }
+
+            // Restore weapons
+            if (sheet.weapons && Array.isArray(sheet.weapons)) {
+                document.getElementById('weapons-tbody').innerHTML = '';
+                weaponRowCount = 0;
+                sheet.weapons.forEach(wpn => addWeaponRow(wpn));
+            }
+
+            calculateDerivedStats();
+            updateAllGrids();
+            closeModal('loadModal');
+            showToast(currentLang === 'en' ? "Character loaded successfully!" : "¡Personaje cargado con éxito!", "success");
+        } catch(e) {
+            showToast("Load error: " + e.message, "error");
         }
-        closeModal();
-        alert("Character loaded!");
+    }
+
+    // --- INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Initialize Supabase Client
+        try {
+            const _supabaseUrl = 'https://woncmedruwdkynifluhh.supabase.co';
+            const _supabaseKey = 'sb_publishable_H9v99xDm0xCIfYBAtFbJTw_y3WNz3vk';
+            if (window.supabase && typeof window.supabase.createClient === 'function') {
+                supabaseClient = window.supabase.createClient(_supabaseUrl, _supabaseKey);
+            }
+        } catch(err) {
+            console.error("Supabase failed to initialize:", err);
+        }
+
+        // 2. Build Grids, Render Skills & Default Weapons
+        initAllGrids();
+        renderSkills();
+        initDefaultWeapons();
+
+        // 3. Attach listeners to static inputs
+        attachCalcListeners();
+
+        // 4. Also listen to characteristics & mythos for derived calculations
+        ['age', 'str', 'dex', 'int', 'con', 'app', 'pow', 'siz', 'edu', 'skill_cthulhu_mythos'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', () => {
+                    updateHalvesAndFifths(el);
+                    calculateDerivedStats();
+                });
+            }
+        });
+
+        // 5. Allow pressing Enter in delta inputs to trigger reduction
+        ['hp', 'mp', 'san', 'luck'].forEach(type => {
+            const deltaEl = document.getElementById(`${type}_delta`);
+            if (deltaEl) {
+                deltaEl.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        applyDelta(type, -1);
+                    }
+                });
+            }
+        });
+    });
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        initAllGrids();
+        renderSkills();
+        initDefaultWeapons();
+        attachCalcListeners();
     }
 </script>
 </body>
