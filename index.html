@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Call of Cthulhu 7e - Investigator Sheet</title>
+    <!-- Supabase Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -16,7 +17,7 @@
         
         .header-wrapper { position: relative; text-align: center; border-bottom: 3px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; }
         h1 { font-size: 2em; text-transform: uppercase; margin: 10px 0 0 0; }
-        .lang-toggle { position: absolute; top: 0; right: 0; background-color: #34495e; padding: 5px 10px; }
+        .lang-toggle { position: absolute; top: 0; right: 0; background-color: #34495e; color: white; padding: 5px 10px; border: none; cursor: pointer; border-radius: 3px;}
 
         .section-title { background-color: var(--header-bg); color: var(--text-light); padding: 8px 15px; font-size: 1.2em; margin: 20px 0 10px 0; text-transform: uppercase; }
         
@@ -26,12 +27,18 @@
         
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-weight: bold; font-size: 0.9em; margin-bottom: 3px; }
-        input[type="text"], input[type="number"], input[type="password"], select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-family: 'Arial', sans-serif; width: 100%; }
+        
+        input[type="text"], input[type="password"], select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-family: 'Arial', sans-serif; width: 100%; }
+        
+        /* FIX: Remove browser arrows from number fields and adjust spacing */
+        input[type="number"] { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-family: 'Arial', sans-serif; width: 100%; -moz-appearance: textfield; }
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
         .stat-group { display: flex; justify-content: center; gap: 3px; margin-top: 5px; }
-        .stat-group input { text-align: center; font-family: 'Arial', sans-serif;}
+        .stat-group input { text-align: center; font-family: 'Arial', sans-serif; padding: 4px; }
         .stat-group input.base { width: 50%; font-size: 1.2em; font-weight: bold; }
-        .stat-group input.derived { width: 25%; font-size: 0.9em; background-color: var(--calc-bg); cursor: not-allowed; padding: 4px;}
+        .stat-group input.derived { width: 25%; font-size: 0.9em; background-color: var(--calc-bg); cursor: not-allowed; }
         
         .stat-box { border: 2px solid var(--border-color); padding: 10px; text-align: center; border-radius: 5px; }
         .stat-box label { font-size: 1.1em; display: block; font-weight: bold;}
@@ -39,14 +46,13 @@
         .skill-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 5px 0;}
         .skill-row label { font-size: 0.9em; width: 60%; }
         .skill-row .stat-group { width: 40%; margin-top: 0; justify-content: flex-end; }
-        .skill-row .stat-group input.base { width: 45px; padding: 4px; font-size: 1em; }
+        .skill-row .stat-group input.base { width: 45px; font-size: 1em; }
         .skill-row .stat-group input.derived { width: 35px; }
 
         .controls { margin-bottom: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; padding: 15px; background: #e8e8e8; border-radius: 5px; }
         button { padding: 10px 15px; font-size: 0.9em; font-weight: bold; cursor: pointer; background-color: var(--header-bg); color: white; border: none; border-radius: 5px; flex-grow: 1; text-align: center; }
         button:hover { background-color: #2c3e50; }
 
-        /* Modal Styles */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 20px; border-radius: 5px; width: 90%; max-width: 400px; text-align: center; }
         .modal-content h3 { margin-top: 0; }
@@ -116,6 +122,7 @@
     <div class="grid-3" id="skills-container"></div>
 </div>
 
+<!-- Load Modal -->
 <div id="loadModal" class="modal">
     <div class="modal-content">
         <h3>Select Character to Load</h3>
@@ -129,15 +136,9 @@
 </div>
 
 <script>
-    // --- SUPABASE SETUP ---
-    // !!! REPLACE THESE STRINGS WITH YOUR KEYS FROM STEP 2 !!!
-    const _supabaseUrl = 'https://woncmedruwdkynifluhh.supabase.co/rest/v1/';
-    const _supabaseKey = 'sb_publishable_H9v99xDm0xCIfYBAtFbJTw_y3WNz3vk';
-    const supabase = window.supabase.createClient(_supabaseUrl, _supabaseKey);
-
+    // FIX: Render UI logic first so HTML works even if Database fails.
     let currentLang = 'en';
 
-    // --- Translation Dictionary (Abbreviated for space, same as before) ---
     const dict = {
         "en": { "title": "Call of Cthulhu - 7th Edition", "btn_save": "☁️ Save to DB", "btn_load": "☁️ Load from DB", "btn_clear": "🗑️ New / Clear", "sec_investigator": "Investigator Data", "sec_characteristics": "Characteristics", "sec_status": "Status Metrics", "sec_skills": "Skills", "lbl_name": "Name", "lbl_player": "Player", "lbl_occupation": "Occupation", "lbl_age": "Age", "stat_str": "STR", "stat_dex": "DEX", "stat_int": "INT", "stat_con": "CON", "stat_app": "APP", "stat_pow": "POW", "stat_siz": "SIZ", "stat_edu": "EDU", "stat_hp": "Hit Points", "stat_san": "Sanity", "stat_mp": "Magic Points", "stat_luck": "Luck", "stat_move": "Move Rate", "stat_build": "Build" },
         "es": { "title": "La Llamada de Cthulhu - 7ª Edición", "btn_save": "☁️ Guardar en BD", "btn_load": "☁️ Cargar de BD", "btn_clear": "🗑️ Nuevo / Limpiar", "sec_investigator": "Datos del Investigador", "sec_characteristics": "Características", "sec_status": "Métricas de Estado", "sec_skills": "Habilidades", "lbl_name": "Nombre", "lbl_player": "Jugador", "lbl_occupation": "Ocupación", "lbl_age": "Edad", "stat_str": "FUE", "stat_dex": "DES", "stat_int": "INT", "stat_con": "CON", "stat_app": "APA", "stat_pow": "POD", "stat_siz": "TAM", "stat_edu": "EDU", "stat_hp": "Puntos de Vida", "stat_san": "Cordura", "stat_mp": "Puntos Magia", "stat_luck": "Suerte", "stat_move": "Movimiento", "stat_build": "Corpulencia" }
@@ -147,9 +148,10 @@
         { id: "brawl", en: "Fighting: Brawl (25%)", es: "Pelea (25%)" },
         { id: "handgun", en: "Firearms: Handgun (20%)", es: "Armas: Cortas (20%)" },
         { id: "spot", en: "Spot Hidden (25%)", es: "Descubrir (25%)" },
-        { id: "stealth", en: "Stealth (20%)", es: "Sigilo (20%)" }
-        // Add the rest of your skills back in here! I shortened it so it's easy to paste on mobile.
-    ];
+        { id: "stealth", en: "Stealth (20%)", es: "Sigilo (20%)" },
+        { id: "library", en: "Library Use (20%)", es: "Uso de Biblioteca (20%)" },
+        { id: "persuade", en: "Persuade (10%)", es: "Persuadir (10%)" }
+    ]; // Add any additional skills to this array
 
     function renderSkills() {
         const container = document.getElementById('skills-container');
@@ -193,8 +195,22 @@
         }
     }
 
-    // --- DB SAVE LOGIC ---
+    // Initialize UI instantly
+    renderSkills();
+
+    // --- SUPABASE SETUP ---
+    // Make sure you keep the SINGLE QUOTES around your keys here
+    let supabase;
+    try {
+        const _supabaseUrl = 'https://woncmedruwdkynifluhh.supabase.co/rest/v1/';
+        const _supabaseKey = 'sb_publishable_H9v99xDm0xCIfYBAtFbJTw_y3WNz3vk';
+        supabase = window.supabase.createClient(_supabaseUrl, _supabaseKey);
+    } catch(err) {
+        console.error("Supabase failed to initialize. Check quotes around your API keys.");
+    }
+
     async function saveToDB() {
+        if(!supabase) return alert("Database connection failed. Please check your API keys in the code.");
         const charName = document.getElementById('charName').value.trim();
         if(!charName) return alert("Please enter a Character Name first!");
         
@@ -206,7 +222,6 @@
             if (input.id && input.type !== 'password') data[input.id] = input.value;
         });
 
-        // Check if character exists to update, or insert new
         const { data: existing } = await supabase.from('characters').select('id, char_pin').eq('char_name', charName).single();
         
         if (existing) {
@@ -221,8 +236,8 @@
         }
     }
 
-    // --- DB LOAD LOGIC ---
     async function openLoadModal() {
+        if(!supabase) return alert("Database connection failed. Please check your API keys in the code.");
         document.getElementById('loadModal').style.display = 'flex';
         const select = document.getElementById('charSelect');
         select.innerHTML = '<option>Loading...</option>';
@@ -249,7 +264,6 @@
         
         if (data.char_pin !== pin) return alert("Incorrect PIN!");
 
-        // Load data into sheet
         for (const key in data.sheet_data) {
             const el = document.getElementById(key);
             if (el) {
@@ -260,10 +274,6 @@
         closeModal();
         alert("Character loaded!");
     }
-
-    renderSkills();
 </script>
-</body>
-</html>
 </body>
 </html>
