@@ -50,12 +50,12 @@
         .stat-box label { font-size: 0.92em; display: block; font-weight: bold; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .stat-box .hint { font-size: 0.72em; color: #7f8c8d; display: block; margin-top: 3px; }
 
-        /* Trackers Container with Physical Sheet Grids */
+        /* Trackers Container */
         .trackers-container { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 10px; }
-        .tracker-card { border: 2px solid var(--border-color); border-radius: 6px; background: #fafafa; padding: 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+        .tracker-card { border: 2px solid var(--border-color); border-radius: 6px; background: #fafafa; padding: 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
         .tracker-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; padding-bottom: 6px; flex-wrap: wrap; gap: 6px; }
         .tracker-header h3 { margin: 0; font-size: 1.05em; color: var(--header-bg); text-transform: uppercase; }
-        .tracker-values { display: flex; gap: 6px; align-items: center; }
+        .tracker-values { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
         .tracker-badge { background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 2px 6px; font-size: 0.84em; font-weight: bold; display: flex; align-items: center; gap: 4px; }
         .tracker-badge input { width: 44px; padding: 2px 4px; font-size: 1em; font-weight: bold; text-align: center; border: 1px solid #aaa; border-radius: 3px; }
 
@@ -77,14 +77,6 @@
         .condition-checks { display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; padding: 4px 8px; background: #fff; border: 1px dashed #ccc; border-radius: 4px; font-size: 0.78em; }
         .condition-checks label { display: flex; align-items: center; gap: 5px; font-weight: normal; cursor: pointer; margin: 0; }
         .condition-checks input[type="checkbox"] { width: 14px; height: 14px; cursor: pointer; margin: 0; }
-
-        /* Number Grid Container */
-        .num-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(26px, 1fr)); gap: 3px; background: #fff; border: 1px solid #ccc; padding: 6px; border-radius: 4px; max-height: 135px; overflow-y: auto; }
-        .num-grid.small-range { max-height: none; grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)); }
-        .grid-num { font-family: 'Courier New', monospace; font-size: 0.78em; padding: 4px 2px; text-align: center; border: 1px solid #ddd; border-radius: 2px; background: #fdfdfd; cursor: pointer; user-select: none; color: #444; transition: all 0.12s; }
-        .grid-num:hover { background: #2980b9; color: #fff; border-color: #2980b9; }
-        .grid-num.active { background: #1a252f !important; color: var(--gold) !important; font-weight: bold; border-color: #1a252f !important; box-shadow: 0 0 6px rgba(241,196,15,0.7); transform: scale(1.08); z-index: 2; }
-        .grid-num.over-max { color: #bbb; background: #f3f3f3; text-decoration: line-through; opacity: 0.6; }
 
         /* Skills toolbar & row */
         .skills-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px; flex-wrap: wrap; }
@@ -190,10 +182,10 @@
         <div class="stat-box"><label data-i18n="stat_edu">EDU</label><div class="stat-group"><input type="number" id="edu" class="base auto-calc"><input type="number" readonly class="derived half" tabindex="-1"><input type="number" readonly class="derived fifth" tabindex="-1"></div><span class="hint" data-i18n="lbl_know">Know</span></div>
     </div>
 
-    <!-- Status & Interactive Physical Grids -->
+    <!-- Status & Trackers Section -->
     <div class="section-title">
         <span data-i18n="sec_status">Status & Trackers</span>
-        <span class="section-hint" data-i18n="hint_trackers">Click numbers or use [+/-] delta to update</span>
+        <span class="section-hint" data-i18n="hint_trackers">Current and Max values with [+ / −] to rest or add</span>
     </div>
     
     <div class="trackers-container">
@@ -207,10 +199,10 @@
                 </div>
             </div>
             <div class="delta-bar">
-                <label data-i18n="lbl_delta">Delta:</label>
+                <label data-i18n="lbl_delta">Adjust:</label>
+                <button type="button" class="btn-delta minus" onclick="applyDelta('hp', -1)" title="Restar / Subtract">−</button>
                 <input type="number" id="hp_delta" placeholder="Pts" min="1" class="delta-val">
-                <button type="button" class="btn-delta minus" onclick="applyDelta('hp', -1)" title="Reduce HP">−</button>
-                <button type="button" class="btn-delta plus" onclick="applyDelta('hp', +1)" title="Increase HP">+</button>
+                <button type="button" class="btn-delta plus" onclick="applyDelta('hp', +1)" title="Sumar / Add">+</button>
                 <div class="quick-step-btns">
                     <button type="button" class="btn-step" onclick="applyDirectDelta('hp', -1)">-1</button>
                     <button type="button" class="btn-step" onclick="applyDirectDelta('hp', +1)">+1</button>
@@ -222,8 +214,6 @@
                 <label><input type="checkbox" id="hp_unconscious"><span data-i18n="cond_unconscious">Unconscious</span></label>
                 <label><input type="checkbox" id="hp_dying"><span data-i18n="cond_dying">Dying</span></label>
             </div>
-            <!-- Physical Sheet Grid: 00 to 24 -->
-            <div class="num-grid small-range" id="grid_hp"></div>
         </div>
 
         <!-- 2. Sanity Tracker -->
@@ -237,10 +227,10 @@
                 </div>
             </div>
             <div class="delta-bar">
-                <label data-i18n="lbl_delta">Delta:</label>
+                <label data-i18n="lbl_delta">Adjust:</label>
+                <button type="button" class="btn-delta minus" onclick="applyDelta('san', -1)" title="Restar / Subtract">−</button>
                 <input type="number" id="san_delta" placeholder="Pts" min="1" class="delta-val">
-                <button type="button" class="btn-delta minus" onclick="applyDelta('san', -1)" title="Reduce Sanity">−</button>
-                <button type="button" class="btn-delta plus" onclick="applyDelta('san', +1)" title="Increase Sanity">+</button>
+                <button type="button" class="btn-delta plus" onclick="applyDelta('san', +1)" title="Sumar / Add">+</button>
                 <div class="quick-step-btns">
                     <button type="button" class="btn-step" onclick="applyDirectDelta('san', -1)">-1</button>
                     <button type="button" class="btn-step" onclick="applyDirectDelta('san', -5)">-5</button>
@@ -252,8 +242,6 @@
                 <label><input type="checkbox" id="san_indef_insane"><span data-i18n="cond_indef_insane">Indef. Insane</span></label>
                 <label><input type="checkbox" id="san_permanently_insane"><span data-i18n="cond_loco">Loco</span></label>
             </div>
-            <!-- Physical Sheet Grid: 01 to 99 -->
-            <div class="num-grid" id="grid_san"></div>
         </div>
 
         <!-- 3. Magic Points Tracker -->
@@ -266,18 +254,16 @@
                 </div>
             </div>
             <div class="delta-bar">
-                <label data-i18n="lbl_delta">Delta:</label>
+                <label data-i18n="lbl_delta">Adjust:</label>
+                <button type="button" class="btn-delta minus" onclick="applyDelta('mp', -1)" title="Restar / Spend">−</button>
                 <input type="number" id="mp_delta" placeholder="Pts" min="1" class="delta-val">
-                <button type="button" class="btn-delta minus" onclick="applyDelta('mp', -1)" title="Spend MP">−</button>
-                <button type="button" class="btn-delta plus" onclick="applyDelta('mp', +1)" title="Regain MP">+</button>
+                <button type="button" class="btn-delta plus" onclick="applyDelta('mp', +1)" title="Sumar / Regain">+</button>
                 <div class="quick-step-btns">
                     <button type="button" class="btn-step" onclick="applyDirectDelta('mp', -1)">-1</button>
                     <button type="button" class="btn-step" onclick="applyDirectDelta('mp', +1)">+1</button>
                     <button type="button" class="btn-step" onclick="resetToMax('mp')">Max</button>
                 </div>
             </div>
-            <!-- Physical Sheet Grid: 00 to 24 -->
-            <div class="num-grid small-range" id="grid_mp"></div>
         </div>
 
         <!-- 4. Luck Tracker -->
@@ -286,15 +272,16 @@
                 <h3 data-i18n="stat_luck">Luck</h3>
                 <div class="tracker-values">
                     <span class="tracker-badge"><span data-i18n="lbl_cur">Cur:</span><input type="number" id="luck" class="base auto-calc" oninput="onTrackerInput('luck')"></span>
+                    <span class="tracker-badge"><span data-i18n="lbl_max">Max:</span><input type="number" id="luck_max" value="99" readonly style="background-color: var(--calc-bg);"></span>
                     <span class="tracker-badge"><span data-i18n="lbl_half">½:</span><input type="number" id="luck_half" readonly class="derived half" tabindex="-1"></span>
                     <span class="tracker-badge"><span data-i18n="lbl_fifth">⅕:</span><input type="number" id="luck_fifth" readonly class="derived fifth" tabindex="-1"></span>
                 </div>
             </div>
             <div class="delta-bar">
-                <label data-i18n="lbl_delta">Delta:</label>
+                <label data-i18n="lbl_delta">Adjust:</label>
+                <button type="button" class="btn-delta minus" onclick="applyDelta('luck', -1)" title="Restar / Spend">−</button>
                 <input type="number" id="luck_delta" placeholder="Pts" min="1" class="delta-val">
-                <button type="button" class="btn-delta minus" onclick="applyDelta('luck', -1)" title="Spend Luck">−</button>
-                <button type="button" class="btn-delta plus" onclick="applyDelta('luck', +1)" title="Gain Luck">+</button>
+                <button type="button" class="btn-delta plus" onclick="applyDelta('luck', +1)" title="Sumar / Gain">+</button>
                 <div class="quick-step-btns">
                     <button type="button" class="btn-step" onclick="applyDirectDelta('luck', -1)">-1</button>
                     <button type="button" class="btn-step" onclick="applyDirectDelta('luck', -5)">-5</button>
@@ -304,8 +291,6 @@
             <div class="condition-checks">
                 <label><input type="checkbox" id="luck_spent"><span data-i18n="cond_luck_spent">Spent (Agotada)</span></label>
             </div>
-            <!-- Physical Sheet Grid: 01 to 99 -->
-            <div class="num-grid" id="grid_luck"></div>
         </div>
     </div>
 
@@ -433,7 +418,7 @@
             "lbl_start": "Start:",
             "lbl_half": "½:",
             "lbl_fifth": "⅕:",
-            "lbl_delta": "Delta:",
+            "lbl_delta": "Adjust:",
             "stat_str": "STR",
             "stat_dex": "DEX",
             "stat_int": "INT",
@@ -450,7 +435,7 @@
             "stat_db": "Damage Bonus (DB)",
             "stat_combat_dodge": "Dodge (Esquivar)",
             "hint_char_triad": "Standard / Hard (½) / Extreme (⅕)",
-            "hint_trackers": "Click numbers in grid or use Delta [+ / −] to adjust",
+            "hint_trackers": "Current and Max values with [+ / −] to rest or add",
             "hint_combat": "Damage Bonus, Build, Dodge & Weapons",
             "hint_dev_box": "☑ = Development Check / Experiencia",
             "cond_major_wound": "Major Wound (Herida Grave)",
@@ -519,7 +504,7 @@
             "stat_db": "Bonif. Daño (BD)",
             "stat_combat_dodge": "Esquivar",
             "hint_char_triad": "Normal / Difícil (½) / Extremo (⅕)",
-            "hint_trackers": "Haz clic en la grilla o usa Ajuste [+ / −] para modificar",
+            "hint_trackers": "Valores actual y máximo con opción de restar o sumar [+ / −]",
             "hint_combat": "Bonificación de daño, corpulencia, esquivar y armas",
             "hint_dev_box": "☑ = Marca de desarrollo (éxito en sesión)",
             "cond_major_wound": "Herida Grave",
@@ -618,30 +603,10 @@
         return num < 10 ? '0' + num : '' + num;
     }
 
-    function initAllGrids() {
-        buildGrid('hp', 0, 24);
-        buildGrid('mp', 0, 24);
-        buildGrid('san', 1, 99);
-        buildGrid('luck', 1, 99);
-    }
-
-    function buildGrid(type, min, max) {
-        const container = document.getElementById(`grid_${type}`);
-        if (!container) return;
-        container.innerHTML = '';
-        for (let i = min; i <= max; i++) {
-            const span = document.createElement('span');
-            span.className = 'grid-num';
-            span.id = `cell_${type}_${i}`;
-            span.dataset.val = i;
-            span.dataset.type = type;
-            span.innerText = pad2(i);
-            span.onclick = function() {
-                setTrackerValue(type, i);
-            };
-            container.appendChild(span);
-        }
-    }
+    // --- TRACKER LOGIC ---
+    function initAllGrids() {}
+    function updateGridHighlight(type, curVal) {}
+    function updateAllGrids() {}
 
     function getTrackerInput(type) {
         if (type === 'luck') return document.getElementById('luck');
@@ -652,15 +617,16 @@
         const input = getTrackerInput(type);
         if (input) {
             input.value = val;
-            updateGridHighlight(type, val);
+            updateHalvesAndFifths(input);
             input.dispatchEvent(new Event('input'));
         }
     }
 
     function onTrackerInput(type) {
         const input = getTrackerInput(type);
-        const val = parseInt(input ? input.value : 0);
-        updateGridHighlight(type, isNaN(val) ? -1 : val);
+        if (input) {
+            updateHalvesAndFifths(input);
+        }
     }
 
     function applyDelta(type, sign) {
@@ -687,12 +653,13 @@
             const max = parseInt(document.getElementById('san_max')?.value) || 99;
             if (cur > max) cur = max;
         } else if (type === 'luck') {
-            if (cur > 99) cur = 99;
+            const max = parseInt(document.getElementById('luck_max')?.value) || 99;
+            if (cur > max) cur = max;
         }
 
         curInput.value = cur;
         if (deltaInput) deltaInput.value = '';
-        updateGridHighlight(type, cur);
+        updateHalvesAndFifths(curInput);
         curInput.dispatchEvent(new Event('input'));
     }
 
@@ -714,11 +681,12 @@
             const max = parseInt(document.getElementById('san_max')?.value) || 99;
             if (cur > max) cur = max;
         } else if (type === 'luck') {
-            if (cur > 99) cur = 99;
+            const max = parseInt(document.getElementById('luck_max')?.value) || 99;
+            if (cur > max) cur = max;
         }
 
         curInput.value = cur;
-        updateGridHighlight(type, cur);
+        updateHalvesAndFifths(curInput);
         curInput.dispatchEvent(new Event('input'));
     }
 
@@ -727,39 +695,9 @@
         const curInput = getTrackerInput(type);
         if (maxInput && curInput && maxInput.value !== "") {
             curInput.value = maxInput.value;
-            updateGridHighlight(type, parseInt(maxInput.value));
+            updateHalvesAndFifths(curInput);
             curInput.dispatchEvent(new Event('input'));
         }
-    }
-
-    function updateGridHighlight(type, curVal) {
-        const container = document.getElementById(`grid_${type}`);
-        if (!container) return;
-
-        let maxVal = 999;
-        if (type === 'hp') maxVal = parseInt(document.getElementById('hp_max')?.value) || 999;
-        else if (type === 'mp') maxVal = parseInt(document.getElementById('mp_max')?.value) || 999;
-        else if (type === 'san') maxVal = parseInt(document.getElementById('san_max')?.value) || 999;
-
-        container.querySelectorAll('.grid-num').forEach(cell => {
-            const val = parseInt(cell.dataset.val);
-            cell.classList.remove('active', 'over-max');
-            if (val === curVal) {
-                cell.classList.add('active');
-                cell.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-            }
-            if (val > maxVal) {
-                cell.classList.add('over-max');
-            }
-        });
-    }
-
-    function updateAllGrids() {
-        ['hp', 'mp', 'san', 'luck'].forEach(type => {
-            const input = getTrackerInput(type);
-            const val = parseInt(input ? input.value : -1);
-            if (!isNaN(val)) updateGridHighlight(type, val);
-        });
     }
 
     // --- SKILLS & LOCALIZATION ---
@@ -896,10 +834,10 @@
     function updateHalvesAndFifths(inputElement) {
         if (!inputElement) return;
         let val = parseInt(inputElement.value);
-        let group = inputElement.parentElement;
+        let group = inputElement.closest('.stat-group') || inputElement.closest('.tracker-values') || inputElement.parentElement;
         if (!group) return;
-        let halfInput = group.querySelector('.half');
-        let fifthInput = group.querySelector('.fifth');
+        let halfInput = group.querySelector('.half') || (inputElement.id === 'luck' ? document.getElementById('luck_half') : null);
+        let fifthInput = group.querySelector('.fifth') || (inputElement.id === 'luck' ? document.getElementById('luck_fifth') : null);
         if (halfInput) halfInput.value = (isNaN(val) || inputElement.value === "") ? "" : Math.floor(val / 2);
         if (fifthInput) fifthInput.value = (isNaN(val) || inputElement.value === "") ? "" : Math.floor(val / 5);
     }
@@ -1003,9 +941,15 @@
             }
         }
 
-        // Luck grid update
-        const curLuck = parseInt(document.getElementById('luck')?.value);
-        if (!isNaN(curLuck)) updateGridHighlight('luck', curLuck);
+        // 6. Luck Max & Halves/Fifths
+        const luckMaxEl = document.getElementById('luck_max');
+        if (luckMaxEl && !luckMaxEl.value) {
+            luckMaxEl.value = 99;
+        }
+        const curLuckEl = document.getElementById('luck');
+        if (curLuckEl) {
+            updateHalvesAndFifths(curLuckEl);
+        }
     }
 
     function clearSheet() {
@@ -1016,11 +960,12 @@
             });
             document.querySelectorAll('input[type="checkbox"]').forEach(cb => { cb.checked = false; });
             document.querySelectorAll('.derived').forEach(input => { input.value = ''; });
+            const luckMaxEl = document.getElementById('luck_max');
+            if (luckMaxEl) luckMaxEl.value = 99;
             document.getElementById('weapons-tbody').innerHTML = '';
             weaponRowCount = 0;
             initDefaultWeapons();
             renderSkills();
-            updateAllGrids();
             showToast(currentLang === 'en' ? "Sheet cleared" : "Ficha limpiada", "info");
         }
     }
@@ -1195,7 +1140,6 @@
             }
 
             calculateDerivedStats();
-            updateAllGrids();
             closeModal('loadModal');
             showToast(currentLang === 'en' ? "Character loaded successfully!" : "¡Personaje cargado con éxito!", "success");
         } catch(e) {
@@ -1216,13 +1160,13 @@
             console.error("Supabase failed to initialize:", err);
         }
 
-        // 2. Build Grids, Render Skills & Default Weapons
-        initAllGrids();
+        // 2. Render Skills & Default Weapons
         renderSkills();
         initDefaultWeapons();
 
         // 3. Attach listeners to static inputs
         attachCalcListeners();
+        calculateDerivedStats();
 
         // 4. Also listen to characteristics & mythos for derived calculations
         ['age', 'str', 'dex', 'int', 'con', 'app', 'pow', 'siz', 'edu', 'skill_cthulhu_mythos'].forEach(id => {
@@ -1250,10 +1194,10 @@
     });
 
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        initAllGrids();
         renderSkills();
         initDefaultWeapons();
         attachCalcListeners();
+        calculateDerivedStats();
     }
 </script>
 </body>
